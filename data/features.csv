@@ -1,0 +1,116 @@
+Feature Name,Feature Description
+MI_dir_L5_weight,MI dir Lambda 5 weight
+MI_dir_L5_mean,MI dir Lambda 5 mean
+MI_dir_L5_variance,MI dir Lambda 5 variance
+MI_dir_L3_weight,MI dir Lambda 3 weight
+MI_dir_L3_mean,MI dir Lambda 3 mean
+MI_dir_L3_variance,MI dir Lambda 3 variance
+MI_dir_L1_weight,MI dir Lambda 1 weight
+MI_dir_L1_mean,MI dir Lambda 1 mean
+MI_dir_L1_variance,MI dir Lambda 1 variance
+MI_dir_L0.1_weight,MI dir Lambda 0.1 weight
+MI_dir_L0.1_mean,MI dir Lambda 0.1 mean
+MI_dir_L0.1_variance,MI dir Lambda 0.1 variance
+MI_dir_L0.01_weight,MI dir Lambda 0.01 weight
+MI_dir_L0.01_mean,MI dir Lambda 0.01 mean
+MI_dir_L0.01_variance,MI dir Lambda 0.01 variance
+H_L5_weight,traffic from this packet's host (IP) Lambda 5 weight
+H_L5_mean,traffic from this packet's host (IP) Lambda 5 mean
+H_L5_variance,traffic from this packet's host (IP) Lambda 5 variance
+H_L3_weight,traffic from this packet's host (IP) Lambda 3 weight
+H_L3_mean,traffic from this packet's host (IP) Lambda 3 mean
+H_L3_variance,traffic from this packet's host (IP) Lambda 3 variance
+H_L1_weight,traffic from this packet's host (IP) Lambda 1 weight
+H_L1_mean,traffic from this packet's host (IP) Lambda 1 mean
+H_L1_variance,traffic from this packet's host (IP) Lambda 1 variance
+H_L0.1_weight,traffic from this packet's host (IP) Lambda 0.1 weight
+H_L0.1_mean,traffic from this packet's host (IP) Lambda 0.1 mean
+H_L0.1_variance,traffic from this packet's host (IP) Lambda 0.1 variance
+H_L0.01_weight,traffic from this packet's host (IP) Lambda 0.01 weight
+H_L0.01_mean,traffic from this packet's host (IP) Lambda 0.01 mean
+H_L0.01_variance,traffic from this packet's host (IP) Lambda 0.01 variance
+HH_L5_weight,traffic going from this packet's host (IP) to the packet's destination host Lambda 5 weight
+HH_L5_mean,traffic going from this packet's host (IP) to the packet's destination host Lambda 5 mean
+HH_L5_std,traffic going from this packet's host (IP) to the packet's destination host Lambda 5 std
+HH_L5_magnitude,traffic going from this packet's host (IP) to the packet's destination host Lambda 5 magnitude
+HH_L5_radius,traffic going from this packet's host (IP) to the packet's destination host Lambda 5 radius
+HH_L5_covariance,traffic going from this packet's host (IP) to the packet's destination host Lambda 5 covariance
+HH_L5_pcc,traffic going from this packet's host (IP) to the packet's destination host Lambda 5 pcc
+HH_L3_weight,traffic going from this packet's host (IP) to the packet's destination host Lambda 3 weight
+HH_L3_mean,traffic going from this packet's host (IP) to the packet's destination host Lambda 3 mean
+HH_L3_std,traffic going from this packet's host (IP) to the packet's destination host Lambda 3 std
+HH_L3_magnitude,traffic going from this packet's host (IP) to the packet's destination host Lambda 3 magnitude
+HH_L3_radius,traffic going from this packet's host (IP) to the packet's destination host Lambda 3 radius
+HH_L3_covariance,traffic going from this packet's host (IP) to the packet's destination host Lambda 3 covariance
+HH_L3_pcc,traffic going from this packet's host (IP) to the packet's destination host Lambda 3 pcc
+HH_L1_weight,traffic going from this packet's host (IP) to the packet's destination host Lambda 1 weight
+HH_L1_mean,traffic going from this packet's host (IP) to the packet's destination host Lambda 1 mean
+HH_L1_std,traffic going from this packet's host (IP) to the packet's destination host Lambda 1 std
+HH_L1_magnitude,traffic going from this packet's host (IP) to the packet's destination host Lambda 1 magnitude
+HH_L1_radius,traffic going from this packet's host (IP) to the packet's destination host Lambda 1 radius
+HH_L1_covariance,traffic going from this packet's host (IP) to the packet's destination host Lambda 1 covariance
+HH_L1_pcc,traffic going from this packet's host (IP) to the packet's destination host Lambda 1 pcc
+HH_L0.1_weight,traffic going from this packet's host (IP) to the packet's destination host Lambda 0.1 weight
+HH_L0.1_mean,traffic going from this packet's host (IP) to the packet's destination host Lambda 0.1 mean
+HH_L0.1_std,traffic going from this packet's host (IP) to the packet's destination host Lambda 0.1 std
+HH_L0.1_magnitude,traffic going from this packet's host (IP) to the packet's destination host Lambda 0.1 magnitude
+HH_L0.1_radius,traffic going from this packet's host (IP) to the packet's destination host Lambda 0.1 radius
+HH_L0.1_covariance,traffic going from this packet's host (IP) to the packet's destination host Lambda 0.1 covariance
+HH_L0.1_pcc,traffic going from this packet's host (IP) to the packet's destination host Lambda 0.1 pcc
+HH_L0.01_weight,traffic going from this packet's host (IP) to the packet's destination host Lambda 0.01 weight
+HH_L0.01_mean,traffic going from this packet's host (IP) to the packet's destination host Lambda 0.01 mean
+HH_L0.01_std,traffic going from this packet's host (IP) to the packet's destination host Lambda 0.01 std
+HH_L0.01_magnitude,traffic going from this packet's host (IP) to the packet's destination host Lambda 0.01 magnitude
+HH_L0.01_radius,traffic going from this packet's host (IP) to the packet's destination host Lambda 0.01 radius
+HH_L0.01_covariance,traffic going from this packet's host (IP) to the packet's destination host Lambda 0.01 covariance
+HH_L0.01_pcc,traffic going from this packet's host (IP) to the packet's destination host Lambda 0.01 pcc
+HH_jit_L5_weight,Jitter of the traffic going from this packet's host Lambda 5 weight
+HH_jit_L5_mean,Jitter of the traffic going from this packet's host Lambda 5 mean
+HH_jit_L5_variance,Jitter of the traffic going from this packet's host Lambda 5 variance
+HH_jit_L3_weight,Jitter of the traffic going from this packet's host Lambda 3 weight
+HH_jit_L3_mean,Jitter of the traffic going from this packet's host Lambda 3 mean
+HH_jit_L3_variance,Jitter of the traffic going from this packet's host Lambda 3 variance
+HH_jit_L1_weight,Jitter of the traffic going from this packet's host Lambda 1 weight
+HH_jit_L1_mean,Jitter of the traffic going from this packet's host Lambda 1 mean
+HH_jit_L1_variance,Jitter of the traffic going from this packet's host Lambda 1 variance
+HH_jit_L0.1_weight,Jitter of the traffic going from this packet's host Lambda 0.1 weight
+HH_jit_L0.1_mean,Jitter of the traffic going from this packet's host Lambda 0.1 mean
+HH_jit_L0.1_variance,Jitter of the traffic going from this packet's host Lambda 0.1 variance
+HH_jit_L0.01_weight,Jitter of the traffic going from this packet's host Lambda 0.01 weight
+HH_jit_L0.01_mean,Jitter of the traffic going from this packet's host Lambda 0.01 mean
+HH_jit_L0.01_variance,Jitter of the traffic going from this packet's host Lambda 0.01 variance
+HpHp_L5_weight,traffic going from this packet's host+port (IP) to the packet's destination host+port Lambda 5 weight
+HpHp_L5_mean,traffic going from this packet's host+port (IP) to the packet's destination host+port Lambda 5 mean
+HpHp_L5_std,traffic going from this packet's host+port (IP) to the packet's destination host+port Lambda 5 std
+HpHp_L5_magnitude,traffic going from this packet's host+port (IP) to the packet's destination host+port Lambda 5 magnitude
+HpHp_L5_radius,traffic going from this packet's host+port (IP) to the packet's destination host+port Lambda 5 radius
+HpHp_L5_covariance,traffic going from this packet's host+port (IP) to the packet's destination host+port Lambda 5 covariance
+HpHp_L5_pcc,traffic going from this packet's host+port (IP) to the packet's destination host+port Lambda 5 pcc
+HpHp_L3_weight,traffic going from this packet's host+port (IP) to the packet's destination host+port Lambda 3 weight
+HpHp_L3_mean,traffic going from this packet's host+port (IP) to the packet's destination host+port Lambda 3 mean
+HpHp_L3_std,traffic going from this packet's host+port (IP) to the packet's destination host+port Lambda 3 std
+HpHp_L3_magnitude,traffic going from this packet's host+port (IP) to the packet's destination host+port Lambda 3 magnitude
+HpHp_L3_radius,traffic going from this packet's host+port (IP) to the packet's destination host+port Lambda 3 radius
+HpHp_L3_covariance,traffic going from this packet's host+port (IP) to the packet's destination host+port Lambda 3 covariance
+HpHp_L3_pcc,traffic going from this packet's host+port (IP) to the packet's destination host+port Lambda 3 pcc
+HpHp_L1_weight,traffic going from this packet's host+port (IP) to the packet's destination host+port Lambda 1 weight
+HpHp_L1_mean,traffic going from this packet's host+port (IP) to the packet's destination host+port Lambda 1 mean
+HpHp_L1_std,traffic going from this packet's host+port (IP) to the packet's destination host+port Lambda 1 std
+HpHp_L1_magnitude,traffic going from this packet's host+port (IP) to the packet's destination host+port Lambda 1 magnitude
+HpHp_L1_radius,traffic going from this packet's host+port (IP) to the packet's destination host+port Lambda 1 radius
+HpHp_L1_covariance,traffic going from this packet's host+port (IP) to the packet's destination host+port Lambda 1 covariance
+HpHp_L1_pcc,traffic going from this packet's host+port (IP) to the packet's destination host+port Lambda 1 pcc
+HpHp_L0.1_weight,traffic going from this packet's host+port (IP) to the packet's destination host+port Lambda 0.1 weight
+HpHp_L0.1_mean,traffic going from this packet's host+port (IP) to the packet's destination host+port Lambda 0.1 mean
+HpHp_L0.1_std,traffic going from this packet's host+port (IP) to the packet's destination host+port Lambda 0.1 std
+HpHp_L0.1_magnitude,traffic going from this packet's host+port (IP) to the packet's destination host+port Lambda 0.1 magnitude
+HpHp_L0.1_radius,traffic going from this packet's host+port (IP) to the packet's destination host+port Lambda 0.1 radius
+HpHp_L0.1_covariance,traffic going from this packet's host+port (IP) to the packet's destination host+port Lambda 0.1 covariance
+HpHp_L0.1_pcc,traffic going from this packet's host+port (IP) to the packet's destination host+port Lambda 0.1 pcc
+HpHp_L0.01_weight,traffic going from this packet's host+port (IP) to the packet's destination host+port Lambda 0.01 weight
+HpHp_L0.01_mean,traffic going from this packet's host+port (IP) to the packet's destination host+port Lambda 0.01 mean
+HpHp_L0.01_std,traffic going from this packet's host+port (IP) to the packet's destination host+port Lambda 0.01 std
+HpHp_L0.01_magnitude,traffic going from this packet's host+port (IP) to the packet's destination host+port Lambda 0.01 magnitude
+HpHp_L0.01_radius,traffic going from this packet's host+port (IP) to the packet's destination host+port Lambda 0.01 radius
+HpHp_L0.01_covariance,traffic going from this packet's host+port (IP) to the packet's destination host+port Lambda 0.01 covariance
+HpHp_L0.01_pcc,traffic going from this packet's host+port (IP) to the packet's destination host+port Lambda 0.01 pcc

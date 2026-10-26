@@ -1,0 +1,21 @@
+# Byte-compiled / cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+venv/
+.venv/
+env/
+
+# Environment variables and secrets
+.env
+*.env
+
+# Local SQLite database and large raw CSVs
+data/*.csv
+!data/data_summary.csv
+!data/device_info.csv
+!data/features.csv
+!data/stream_sample_real.csv
+data/*.db

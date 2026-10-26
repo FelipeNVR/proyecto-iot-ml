@@ -1,0 +1,8 @@
+{
+    "scaler_nbaiot.pkl": "2801cce414b73c1ea9e1e9be0035a11993becfb4e5cfa0125f8560e6ab95ca71",
+    "model_baseline_lr.pkl": "ed6a7fe648b3717396ec2ced45d259ce0503b74610e1125229595608923cc40b",
+    "model_candidate_dt.pkl": "d99f8942438bf9ecf041ef781b7c2ba5de9d6b8876c422800b286f67f4062334",
+    "model_random_forest.pkl": "6e92c9b4eb5111f16bf7b1b316845862ed4989f21ab4ace0f77d5edbdd80a4ab",
+    "model_gradient_boosting.pkl": "7f900b746f4f078a853dda86cd88ead3f13476c45d14355f37f8c31327e95faa",
+    "model_svm.pkl": "a3be9e799d208bd4012828358e283d47edb26eaa06f7c4c696dc7fa8878c77cc"
+}
