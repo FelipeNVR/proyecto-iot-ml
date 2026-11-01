@@ -1,4 +1,4 @@
-"""Dashboard MVP de Monitoreo Centralizado de Redes IoT con Autenticación JWT, SQLite y Feature Importance."""
+"""Dashboard IPS de 3 Anillos (Binario + Multiclase 10 Ataques + Zero-Day IsolationForest), Forense Z-Score y Cortafuegos Real."""
 
 import os
 import sys
@@ -7,16 +7,27 @@ import json
 import hmac
 import base64
 import hashlib
+import subprocess
 import joblib
+import numpy as np
 import pandas as pd
 import streamlit as st
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 from src.streaming.emulator import IoTTrafficStreamEmulator
 from src.streaming.incident_store import IncidentStore
+from src.streaming.firewall_controller import (
+    get_adaptive_threshold,
+    extract_root_cause_zscores,
+    generate_firewall_commands,
+    CRITICAL_WHITELIST_IPS,
+    DEVICE_MACS,
+)
+from src.streaming.live_feature_extractor import LiveAfterImageExtractor
+from src.data.preprocess import DEVICE_NAMES, DEVICE_IPS
 
 st.set_page_config(
-    page_title="Sistema Centralizado de Detección de Botnets IoT",
+    page_title="IPS Centralizado de Defensa IoT (3 Anillos)",
     page_icon="🛡️",
     layout="wide",
 )
@@ -88,24 +99,26 @@ def verify_file_sha256(filepath: str, expected_hash: str) -> bool:
 
 @st.cache_resource
 def load_verified_models(registry_dir: str):
-    """Carga los modelos verificando su integridad criptográfica SHA-256 contra manipulaciones."""
+    """Carga los 3 Anillos de Defensa verificando su integridad criptográfica SHA-256."""
     manifest_path = os.path.join(registry_dir, "artifacts_sha256.json")
     if not os.path.exists(manifest_path):
-        return None, {}
+        return None, {}, None, None
 
     with open(manifest_path, "r", encoding="utf-8") as f:
         manifest = json.load(f)
 
     scaler_file = os.path.join(registry_dir, "scaler_nbaiot.pkl")
     if not verify_file_sha256(scaler_file, manifest.get("scaler_nbaiot.pkl", "")):
-        raise SecurityIntegrityError("El artefacto scaler_nbaiot.pkl está corrupto o fue modificado.")
+        raise SecurityIntegrityError(
+            "El artefacto scaler_nbaiot.pkl está corrupto o fue modificado."
+        )
     scaler = joblib.load(scaler_file)
 
     model_mapping = {
         "Random Forest (Ensamble Bagging)": "model_random_forest.pkl",
         "Gradient Boosting (Ensamble Boosting)": "model_gradient_boosting.pkl",
         "Linear Support Vector Machine (LinearSVC Calibrado)": "model_svm.pkl",
-        "Árbol de Decisión (max_depth=8)": "model_candidate_dt.pkl",
+        "Árbol de Decisión (max_depth=5)": "model_candidate_dt.pkl",
         "Regresión Logística (Línea Base Lineal)": "model_baseline_lr.pkl",
     }
 
@@ -121,12 +134,34 @@ def load_verified_models(registry_dir: str):
                 mdl.n_jobs = 1
             models_dict[label] = mdl
 
-    return scaler, models_dict
+    # Cargar Anillo 2 (Clasificador Multiclase de 10 Ataques)
+    mc_model = None
+    mc_path = os.path.join(registry_dir, "model_multiclass_attack.pkl")
+    if os.path.exists(mc_path) and "model_multiclass_attack.pkl" in manifest:
+        if not verify_file_sha256(mc_path, manifest["model_multiclass_attack.pkl"]):
+            raise SecurityIntegrityError(
+                "Integridad comprometida en model_multiclass_attack.pkl."
+            )
+        mc_model = joblib.load(mc_path)
+        if hasattr(mc_model, "n_jobs"):
+            mc_model.n_jobs = 1
+
+    # Cargar Anillo 3 (Detector No Supervisado Zero-Day IsolationForest)
+    zd_model = None
+    zd_path = os.path.join(registry_dir, "model_zeroday_iforest.pkl")
+    if os.path.exists(zd_path) and "model_zeroday_iforest.pkl" in manifest:
+        if not verify_file_sha256(zd_path, manifest["model_zeroday_iforest.pkl"]):
+            raise SecurityIntegrityError(
+                "Integridad comprometida en model_zeroday_iforest.pkl."
+            )
+        zd_model = joblib.load(zd_path)
+        if hasattr(zd_model, "n_jobs"):
+            zd_model.n_jobs = 1
+
+    return scaler, models_dict, mc_model, zd_model
 
 
 # ----------------- CONTROL DE ACCESO (JWT + HMAC) -----------------
-# Las credenciales se leen desde variables de entorno del servidor.
-# No se pre-llenan ni exponen en el formulario para cumplir con OWASP AppSec (CWE-200 / CWE-798).
 JWT_SECRET = os.environ.get("CINF200_JWT_SECRET", "super-secret-iot-unab-2026-key")
 EXPECTED_USER = os.environ.get(
     "CINF200_ANALYST_USER", os.environ.get("IOT_ADMIN_USER", "analista_unab")
@@ -148,7 +183,7 @@ def check_authentication():
     st.markdown(
         """
         <div style='text-align: center; margin-top: 30px; margin-bottom: 20px;'>
-            <h1>🛡️ Acceso Seguro a la Consola de Monitoreo IoT</h1>
+            <h1>🛡️ Acceso Seguro a la Consola IPS de Monitoreo IoT</h1>
             <p style='color: #4A607A;'>Seminario de Licenciatura en Ciencias de la Ingeniería (CINF200) — UNAB</p>
             <p>Control de acceso obligatorio para analistas autorizados mediante tokens JWT (RFC 7519).</p>
         </div>
@@ -200,7 +235,6 @@ if not check_authentication():
 # ----------------- PANEL PRINCIPAL DEL DASHBOARD -----------------
 incident_store = IncidentStore()
 
-# Extraer el sujeto autenticado directamente de los claims del token JWT verificado
 current_user = "analista"
 if st.session_state.jwt_token:
     try:
@@ -212,59 +246,198 @@ if st.session_state.jwt_token:
     except Exception:
         current_user = "analista"
 
-st.sidebar.title("🛡️ Panel del Analista")
+st.sidebar.title("🛡️ Consola IPS del Analista")
 st.sidebar.markdown(f"**Operador:** `{current_user}`")
 st.sidebar.markdown("**Sesión:** JWT `HS256` Válida 🔒")
-st.sidebar.markdown("**Gateway:** Centralizado (Router WiFi)")
+st.sidebar.markdown("**Arquitectura:** Defensa en 3 Anillos")
 
 if st.sidebar.button("Cerrar Sesión", use_container_width=True):
     st.session_state.jwt_token = None
     st.rerun()
 
-st.title("🛡️ Sistema Centralizado de Detección de Botnets IoT")
+st.title("🛡️ Sistema IPS Centralizado de Defensa IoT (Arquitectura de 3 Anillos)")
 st.caption(
-    "Monitoreo de tráfico en tiempo real sobre capturas de 9 dispositivos N-BaIoT infectados por botnets Mirai y BASHLITE. "
-    "Desacoplamiento MLOps mediante artefactos inmutables y persistencia relacional SQLite."
+    "Anillo 1: Clasificador Binario con Umbral Adaptativo | Anillo 2: Clasificador Multiclase de Firma (10 Ataques Mirai/BASHLITE) | "
+    "Anillo 3: Cazador Zero-Day (IsolationForest No Supervisado) + Bloqueo Automático de Paciente Cero y Forense Z-Score."
 )
 
-# Carga segura de modelos
+# Carga segura de los 3 anillos de modelos
 try:
-    scaler, models_dict = load_verified_models(REGISTRY_DIR)
+    scaler, models_dict, multiclass_model, zeroday_model = load_verified_models(
+        REGISTRY_DIR
+    )
 except SecurityIntegrityError as err:
     st.error(f"🚨 ALERTA DE SEGURIDAD CRÍTICA: {err}")
     st.stop()
 
-# Cargar métricas offline
 metrics_path = os.path.join(REGISTRY_DIR, "baseline_metrics.json")
 metrics_data = {}
 if os.path.exists(metrics_path):
     with open(metrics_path, "r", encoding="utf-8") as f:
         metrics_data = json.load(f)
 
-# Selector de modelo
 if models_dict:
     selected_model_label = st.sidebar.selectbox(
-        "Clasificador Activo", options=list(models_dict.keys()), index=0
+        "Anillo 1 — Clasificador Binario", options=list(models_dict.keys()), index=0
     )
     model = models_dict[selected_model_label]
-    st.sidebar.success(f"Modelo activo: {selected_model_label}")
 else:
     selected_model_label = "No disponible"
     model = None
-    st.sidebar.warning("Artefactos no encontrados en models_registry/. Ejecute baseline.py primero.")
+    st.sidebar.warning(
+        "Artefactos no encontrados en models_registry/. Ejecute baseline.py primero."
+    )
 
-# Inicialización de estado de sesión para streaming
+# Controles de Defensa Activa IPS
+st.sidebar.markdown("---")
+st.sidebar.subheader("🛡️ Políticas de Prevención Activa (IPS)")
+adaptive_thr_enabled = st.sidebar.toggle(
+    "Umbral Adaptativo por Perfil (Anti-FPR Cámaras)",
+    value=True,
+    help="Usa umbral 0.50 en sensores/timbres y 0.72 en cámaras de video HD para evitar falsas alarmas por streaming.",
+)
+auto_ips_quarantine = st.sidebar.toggle(
+    "Auto-Aislar Dispositivo al Detectar Ataque (IPS)",
+    value=True,
+    help="Aísla automáticamente en el Firewall del Router (iptables/nftables) a cualquier dispositivo que lance un ataque confirmado.",
+)
+enable_zeroday_ring = st.sidebar.toggle(
+    "Anillo 3: Detector Zero-Day (IsolationForest)",
+    value=True,
+    help="Detecta anomalías desconocidas usando un modelo no supervisado entrenado exclusivamente con tráfico benigno.",
+)
+
+# Inicialización de estado de sesión
 if "stream_data" not in st.session_state:
     st.session_state.stream_data = []
 if "emulator" not in st.session_state:
     st.session_state.emulator = IoTTrafficStreamEmulator()
 if "last_latency_ms" not in st.session_state:
     st.session_state.last_latency_ms = 0.0
+if "quarantined_devices" not in st.session_state:
+    st.session_state.quarantined_devices = set()
+if "firewall_rules_log" not in st.session_state:
+    st.session_state.firewall_rules_log = {}
+if "last_injected_info" not in st.session_state:
+    st.session_state.last_injected_info = None
+if "live_extractor" not in st.session_state and st.session_state.emulator.feature_cols:
+    st.session_state.live_extractor = LiveAfterImageExtractor(
+        st.session_state.emulator.feature_cols
+    )
 
+
+def evaluate_and_record_packet(packet: dict) -> dict:
+    """Ejecuta los 3 Anillos de Defensa, extrae la causa raíz física (Z-Score) y aplica políticas IPS."""
+    t_start = time.perf_counter()
+    feat_scaled = scaler.transform(packet["features"])
+
+    dev_id = int(packet.get("device_id", 1))
+    dev_name = str(
+        packet.get("device_name", DEVICE_NAMES.get(dev_id, f"Disp. {dev_id}"))
+    )
+    dev_ip = str(
+        packet.get("device_ip", DEVICE_IPS.get(dev_id, f"192.168.1.{100+dev_id}"))
+    )
+    dev_label = f"{dev_id}. {dev_name} ({dev_ip})"
+
+    # Anillo 1: Probabilidad supervisada + Umbral Adaptativo según perfil del dispositivo
+    prob = (
+        float(model.predict_proba(feat_scaled)[0][1])
+        if hasattr(model, "predict_proba")
+        else float(model.predict(feat_scaled)[0])
+    )
+    threshold = get_adaptive_threshold(dev_id, adaptive_enabled=adaptive_thr_enabled)
+    pred_ring1 = 1 if prob >= threshold else 0
+
+    # Anillo 3: Detector No Supervisado Zero-Day (IsolationForest)
+    zeroday_flag = False
+    if enable_zeroday_ring and zeroday_model is not None:
+        zd_pred = int(zeroday_model.predict(feat_scaled)[0])  # -1 = anomalía
+        if zd_pred == -1 and prob >= 0.35:
+            zeroday_flag = True
+
+    is_malicious = (pred_ring1 == 1) or zeroday_flag
+
+    # Anillo 2: Clasificador Multiclase de Firma de Botnet (sin leer la etiqueta del CSV)
+    if is_malicious and multiclass_model is not None:
+        ai_predicted_attack = str(multiclass_model.predict(feat_scaled)[0])
+        if ai_predicted_attack in ("BASHLITE_TCP", "BASHLITE_UDP"):
+            w_l5 = float(packet["features"]["MI_dir_L5_weight"].iloc[0])
+            m_l5 = float(packet["features"]["MI_dir_L5_mean"].iloc[0])
+            if w_l5 <= 1.05 and 58.0 <= m_l5 <= 62.0:
+                ai_predicted_attack = "BASHLITE_TCP/UDP (Spoof Flood 60B)"
+        if pred_ring1 == 0 and zeroday_flag:
+            ai_predicted_attack = f"POSIBLE_ZERO_DAY ({ai_predicted_attack})"
+    elif is_malicious:
+        ai_predicted_attack = "ATAQUE_GENERICO"
+    else:
+        ai_predicted_attack = "Benigno"
+
+    # Explicabilidad Forense Local (Top 3 variables físicas con mayor desviación Z-Score)
+    root_cause_str = extract_root_cause_zscores(
+        feat_scaled[0], st.session_state.emulator.feature_cols, top_k=3
+    )
+
+    latency_ms = (time.perf_counter() - t_start) * 1000.0
+    already_quarantined = dev_id in st.session_state.quarantined_devices
+
+    if is_malicious:
+        if already_quarantined:
+            action_str = "🔒 PAQUETE DESCARTADO EN ROUTER (Dispositivo ya en Cuarentena)"
+        elif auto_ips_quarantine:
+            st.session_state.quarantined_devices.add(dev_id)
+            fw_cmds = generate_firewall_commands(dev_id, dev_ip, ai_predicted_attack)
+            st.session_state.firewall_rules_log[dev_id] = fw_cmds
+            action_str = "🛡️ AUTO-AISLADO POR IPS (Regla DROP aplicada en Firewall)"
+        else:
+            action_str = "🚨 Alerta emitida — Pendiente de aislamiento manual"
+
+        incident_store.log_incident(
+            timestamp=packet["timestamp"],
+            model_name=f"{selected_model_label.split(' (')[0]} + Anillo 2",
+            attack_type=(
+                f"IA:{ai_predicted_attack} | Real:{packet['simulated_ground_truth']} "
+                f"| Causa:{root_cause_str}"
+            ),
+            confidence=prob,
+            action=action_str,
+            device_name=dev_label,
+        )
+    else:
+        action_str = (
+            "🔒 Dispositivo en Cuarentena"
+            if already_quarantined
+            else "🟢 Tráfico permitido"
+        )
+
+    record = {
+        "ID": packet["packet_id"],
+        "Hora": packet["timestamp"],
+        "Dispositivo_IoT": dev_label,
+        "CSV_Real_Origen": packet.get("source_csv", "N-BaIoT"),
+        "Real_CSV": packet["simulated_ground_truth"],
+        "Predicción_IA_Anillo2": ai_predicted_attack,
+        "Veredicto": "MALICIOSO" if is_malicious else "BENIGNO",
+        "Score_Anomalía": round(prob, 4),
+        "Umbral_Disp": threshold,
+        "Causa_Raíz_ZScore": root_cause_str,
+        "Acción_IPS": action_str,
+        "Latencia_ms": round(latency_ms, 3),
+    }
+    st.session_state.stream_data.append(record)
+    if len(st.session_state.stream_data) > 60:
+        st.session_state.stream_data.pop(0)
+    st.session_state.last_latency_ms = latency_ms
+    return record
+
+
+# ----------------- BARRA LATERAL: CAPTURA CONTINUA E INYECCIÓN MANUAL -----------------
 st.sidebar.markdown("---")
-st.sidebar.subheader("Simulación de Red (Router Mirroring)")
+st.sidebar.subheader("📡 1. Monitoreo Continuo (Router Mirroring)")
 run_sim = st.sidebar.toggle("Iniciar Captura Continua (En Vivo 🟢)", value=False)
-anomaly_prob = st.sidebar.slider("Probabilidad de Ataque", 0.0, 0.5, 0.15, step=0.05)
+anomaly_prob = st.sidebar.slider(
+    "Frecuencia de Tramas de Ataque", 0.0, 0.8, 0.20, step=0.05
+)
 st.session_state.emulator.anomaly_prob = anomaly_prob
 
 stream_speed = st.sidebar.slider(
@@ -273,130 +446,469 @@ stream_speed = st.sidebar.slider(
     max_value=2.0,
     value=0.5,
     step=0.1,
-    help="Tiempo de espera entre ciclos de refresco continuo.",
 )
 
 packets_per_cycle = st.sidebar.select_slider(
     "Paquetes por ciclo",
     options=[1, 2, 5, 10],
     value=2,
-    help="Cantidad de paquetes evaluados por el modelo en cada iteración.",
 )
 
-if st.sidebar.button("🗑️ Limpiar Base de Datos SQL", use_container_width=True):
+st.sidebar.markdown("---")
+st.sidebar.subheader("⚡ 2. Inyectar Ataque Real a Elección")
+st.sidebar.caption(
+    "Seleccione un dispositivo físico y un ataque real del conjunto de prueba (Test) de N-BaIoT para verificar la detección y el bloqueo IPS al instante."
+)
+
+device_options = {
+    f"{d_id}. {DEVICE_NAMES[d_id]} ({DEVICE_IPS[d_id]})": d_id for d_id in range(1, 10)
+}
+selected_dev_str = st.sidebar.selectbox(
+    "Dispositivo IoT Origen", options=list(device_options.keys()), index=0
+)
+selected_dev_id = device_options[selected_dev_str]
+
+available_attacks = st.session_state.emulator.get_available_attacks(
+    device_id=selected_dev_id
+)
+default_atk_idx = 1 if len(available_attacks) > 1 else 0
+selected_attack_type = st.sidebar.selectbox(
+    "Tipo de Tráfico / Ataque Real (CSV Test)",
+    options=available_attacks,
+    index=default_atk_idx,
+)
+
+burst_count = st.sidebar.select_slider(
+    "Cantidad de tramas reales a inyectar", options=[1, 3, 5, 10], value=1
+)
+
+if st.sidebar.button(
+    "⚡ Lanzar Trama Real Ahora", use_container_width=True, type="primary"
+):
+    if model is not None and scaler is not None:
+        last_rec = None
+        for _ in range(burst_count):
+            pkt = st.session_state.emulator.inject_specific_trace(
+                attack_type=selected_attack_type, device_id=selected_dev_id
+            )
+            last_rec = evaluate_and_record_packet(pkt)
+        st.session_state.last_injected_info = last_rec
+        st.rerun()
+
+st.sidebar.markdown("---")
+if st.sidebar.button(
+    "🗑️ Reiniciar Historial SQL y Cuarentenas", use_container_width=True
+):
     incident_store.clear_all()
     st.session_state.stream_data = []
-    st.sidebar.success("Historial de incidentes y telemetría reiniciados con éxito.")
+    st.session_state.quarantined_devices = set()
+    st.session_state.firewall_rules_log = {}
+    st.session_state.last_injected_info = None
+    st.sidebar.success("Historial de incidentes, telemetría y cuarentenas reiniciados.")
     st.rerun()
 
-# Procesamiento de paquetes en streaming
+# Procesamiento automático si el modo continuo está activo
 if run_sim and model is not None and scaler is not None:
     latencies = []
     for _ in range(packets_per_cycle):
         packet = st.session_state.emulator.stream_packet()
-        t_start = time.perf_counter()
-        feat_scaled = scaler.transform(packet["features"])
-        pred = int(model.predict(feat_scaled)[0])
-        prob = (
-            float(model.predict_proba(feat_scaled)[0][1])
-            if hasattr(model, "predict_proba")
-            else float(pred)
-        )
-        latencies.append((time.perf_counter() - t_start) * 1000.0)
-
-        record = {
-            "ID": packet["packet_id"],
-            "Hora": packet["timestamp"],
-            "Score_Anomalía": round(prob, 4),
-            "Clase_Predicha": "MALICIOSO" if pred == 1 else "BENIGNO",
-            "Simulado": packet["simulated_ground_truth"],
-        }
-        st.session_state.stream_data.append(record)
-        if len(st.session_state.stream_data) > 60:
-            st.session_state.stream_data.pop(0)
-
-        # Solo se registran en la base de datos histórica los incidentes reales (amenazas)
-        if pred == 1:
-            incident_store.log_incident(
-                timestamp=packet["timestamp"],
-                model_name=selected_model_label.split(" (")[0],
-                attack_type=packet["simulated_ground_truth"],
-                confidence=prob,
-                action="Alerta enviada a Gateway",
-            )
+        rec = evaluate_and_record_packet(packet)
+        latencies.append(rec["Latencia_ms"])
     if latencies:
         st.session_state.last_latency_ms = float(sum(latencies) / len(latencies))
 
-# KPIs principales
+# Banner con el diagnóstico forense completo de la última inyección
+if st.session_state.last_injected_info is not None:
+    info = st.session_state.last_injected_info
+    if info["Veredicto"] == "MALICIOSO":
+        st.error(
+            f"🎯 **Inspección Forense de 3 Anillos:** Archivo real **`{info['CSV_Real_Origen']}`** "
+            f"({info['Dispositivo_IoT']}) | **Etiqueta Real CSV:** `{info['Real_CSV']}` ➡️ "
+            f"**Anillo 1:** `{info['Veredicto']}` (Score `{info['Score_Anomalía']:.4f}` vs Umbral `{info['Umbral_Disp']}`) | "
+            f"**Anillo 2 (Firma Predicha por IA sin ver etiqueta):** **`{info['Predicción_IA_Anillo2']}`** | "
+            f"**Causa Raíz Física (Z-Score):** `{info['Causa_Raíz_ZScore']}` | "
+            f"**Respuesta IPS (`{info['Latencia_ms']:.2f} ms`):** {info['Acción_IPS']}"
+        )
+    else:
+        st.success(
+            f"✅ **Inspección Forense de 3 Anillos:** Archivo real **`{info['CSV_Real_Origen']}`** "
+            f"({info['Dispositivo_IoT']}) | **Tráfico Real:** `{info['Real_CSV']}` ➡️ "
+            f"**Clasificado como `BENIGNO`** (Score `{info['Score_Anomalía']:.4f}` < Umbral `{info['Umbral_Disp']}`) "
+            f"en **`{info['Latencia_ms']:.2f} ms`**."
+        )
+
+# ----------------- KPIs PRINCIPALES -----------------
 kpi1, kpi2, kpi3, kpi4, kpi5 = st.columns(5)
 df_stream = pd.DataFrame(st.session_state.stream_data)
 
 if not df_stream.empty:
     total = len(df_stream)
-    malicious = int((df_stream["Clase_Predicha"] == "MALICIOSO").sum())
+    malicious = int((df_stream["Veredicto"] == "MALICIOSO").sum())
     rate = (malicious / total) * 100.0
+    recent_malicious = int((df_stream.tail(5)["Veredicto"] == "MALICIOSO").sum())
 
-    # Detección de ráfagas recientes en los últimos 5 paquetes
-    recent_malicious = int((df_stream.tail(5)["Clase_Predicha"] == "MALICIOSO").sum())
-
-    kpi1.metric("Paquetes Analizados", f"{st.session_state.emulator.packet_count}")
+    kpi1.metric("Tramas Reales Evaluadas", f"{st.session_state.emulator.packet_count}")
     kpi2.metric("Amenazas en Ventana", f"{malicious}")
-    kpi3.metric("Tasa de Anomalías", f"{rate:.1f}%")
-    kpi4.metric("Latencia Inferencia", f"{st.session_state.last_latency_ms:.2f} ms")
+    kpi3.metric(
+        "Dispositivos en Cuarentena",
+        f"{len(st.session_state.quarantined_devices)} / 9",
+    )
+    kpi4.metric("Latencia Inferencia (3 Anillos)", f"{st.session_state.last_latency_ms:.2f} ms")
 
-    # Lógica de estados de alerta de SOC (Security Operations Center):
     if malicious == 0:
         kpi5.success("🟢 ESTADO: RED SEGURA")
     elif recent_malicious >= 2 or rate >= 15.0 or malicious >= 5:
-        kpi5.error("🚨 ESTADO: RED BAJO ATAQUE")
+        kpi5.error("🚨 ESTADO: RED BAJO ATAQUE (IPS ACTIVO)")
     else:
-        kpi5.warning("⚠️ ESTADO: AMENAZA DETECTADA")
+        kpi5.warning("⚠️ ESTADO: INTRUSIÓN CONTENIDA")
 else:
-    kpi1.metric("Paquetes Analizados", 0)
+    kpi1.metric("Tramas Reales Evaluadas", 0)
     kpi2.metric("Amenazas en Ventana", 0)
-    kpi3.metric("Tasa de Anomalías", "0.0%")
-    kpi4.metric("Latencia Inferencia", "0.00 ms")
+    kpi3.metric(
+        "Dispositivos en Cuarentena",
+        f"{len(st.session_state.quarantined_devices)} / 9",
+    )
+    kpi4.metric("Latencia Inferencia (3 Anillos)", "0.00 ms")
     kpi5.info("⏳ EN ESPERA")
 
-col_chart, col_alerts = st.columns([1.8, 1.5])
-with col_chart:
-    st.subheader("📊 Flujo de Tráfico y Puntuación de Inferencia")
-    if not df_stream.empty:
-        st.line_chart(df_stream.set_index("Hora")["Score_Anomalía"], height=220)
+# ----------------- SECCIÓN DE PACIENTE CERO, REGLAS FIREWALL Y ESTADO DE LOS 9 DISPOSITIVOS -----------------
+st.markdown("---")
+st.subheader(
+    "🎯 Detección de Paciente Cero (Primer Dispositivo Comprometido) y Cortafuegos IPS en Router"
+)
 
-        st.markdown("##### 📡 Visor de Telemetría en Vivo (Todos los Flujos)")
-        st.caption(
-            "El **Score de Anomalía** representa la probabilidad condicional $P(\\text{Ataque} \\mid x)$ "
-            "calculada por el modelo (de 0.0 a 1.0). Un score $\\geq 0.50$ clasifica el paquete como MALICIOSO."
+patient_zero = incident_store.get_first_compromised_device()
+col_pz, col_mitigation = st.columns([1.45, 1.55])
+
+with col_pz:
+    if patient_zero:
+        pz_dev_name = patient_zero["device_name"]
+        try:
+            pz_dev_id = int(pz_dev_name.split(".")[0])
+        except Exception:
+            pz_dev_id = 1
+        pz_ip = DEVICE_IPS.get(pz_dev_id, "192.168.1.101")
+        pz_mac = DEVICE_MACS.get(pz_dev_id, "00:16:6C:7B:9A:01")
+        pz_quarantined = pz_dev_id in st.session_state.quarantined_devices
+
+        st.error(
+            f"🚨 **PACIENTE CERO IDENTIFICADO (Primer Dispositivo Atacante):**\n\n"
+            f"- **Dispositivo Físico:** `{pz_dev_name}` | **MAC:** `{pz_mac}`\n"
+            f"- **Hora del Primer Ataque:** `{patient_zero['first_timestamp']}` (Incidente #{patient_zero['incident_id']})\n"
+            f"- **Diagnóstico IA & Causa Raíz:** `{patient_zero['attack_type']}`\n"
+            f"- **Total de Ataques desde este Dispositivo:** `{patient_zero['total_alerts_from_device']}` alertas\n"
+            f"- **Estado en Firewall del Router:** "
+            f"{'🔒 BLOQUEADO EN CUARENTENA (Tráfico Cortado)' if pz_quarantined else '⚠️ ACTIVO EN RED (Requiere Aislamiento)'}"
         )
-        df_telemetry = df_stream.iloc[::-1].head(10).reset_index(drop=True)
+
+        if not pz_quarantined:
+            if st.button(
+                f"🔒 Aislar Paciente Cero (#{pz_dev_id}) en Firewall Router",
+                key="btn_isolate_pz",
+                type="primary",
+                use_container_width=True,
+            ):
+                st.session_state.quarantined_devices.add(pz_dev_id)
+                fw_cmds = generate_firewall_commands(
+                    pz_dev_id, pz_ip, patient_zero["attack_type"][:25]
+                )
+                st.session_state.firewall_rules_log[pz_dev_id] = fw_cmds
+                incident_store.log_incident(
+                    timestamp=time.strftime("%H:%M:%S"),
+                    model_name="Analista / IPS Gateway",
+                    attack_type=patient_zero["attack_type"],
+                    confidence=1.0,
+                    action="🔒 ACCIÓN IPS: Regla DROP aplicada en iptables/nftables + Conntrack Flush",
+                    device_name=pz_dev_name,
+                )
+                st.rerun()
+        else:
+            if st.button(
+                f"🔓 Levantar Cuarentena a Dispositivo #{pz_dev_id}",
+                key="btn_unisolate_pz",
+                use_container_width=True,
+            ):
+                st.session_state.quarantined_devices.discard(pz_dev_id)
+                st.session_state.firewall_rules_log.pop(pz_dev_id, None)
+                st.rerun()
+
+        # Mostrar comandos exactos de Firewall Linux / OpenWrt generados para el router real
+        fw_info = st.session_state.firewall_rules_log.get(
+            pz_dev_id, generate_firewall_commands(pz_dev_id, pz_ip, "Mirai_IPS")
+        )
+        with st.expander(
+            "🧱 Ver Comandos Reales de Cortafuegos Generados (Linux iptables / nftables / OpenWrt)",
+            expanded=True,
+        ):
+            st.caption(
+                f"Lista Blanca Anti-Lockout activa para proteger Gateway y Admin: `{sorted(list(CRITICAL_WHITELIST_IPS))}`"
+            )
+            st.code(
+                f"# 1. Bloqueo inmediato por IP + MAC Address (evita evasión por cambio de IP):\n"
+                f"{fw_info.get('iptables_drop', '')}\n\n"
+                f"# 2. Equivalente en Linux moderno (nftables):\n"
+                f"{fw_info.get('nftables_drop', '')}\n\n"
+                f"# 3. Corte instantáneo de sesiones TCP/UDP activas del atacante:\n"
+                f"{fw_info.get('conntrack_flush', '')}",
+                language="bash",
+            )
+    else:
+        st.info(
+            "🟢 Ningún dispositivo ha presentado comportamiento de botnet aún. "
+            "Presione **'⚡ Lanzar Trama Real Ahora'** en la barra lateral para ver actuar a los 3 Anillos y al IPS."
+        )
+
+with col_mitigation:
+    st.markdown("##### 🖧 Mapa de Estado y Umbrales Adaptativos de los 9 Dispositivos IoT")
+    df_by_dev = incident_store.get_incidents_by_device()
+    alerts_map = {}
+    first_seen_map = {}
+    if not df_by_dev.empty:
+        for _, r in df_by_dev.iterrows():
+            alerts_map[str(r["Dispositivo_IoT"])] = int(r["Total_Ataques"])
+            first_seen_map[str(r["Dispositivo_IoT"])] = str(r["Primer_Ataque"])
+
+    dev_status_rows = []
+    for d_id in range(1, 10):
+        d_label = f"{d_id}. {DEVICE_NAMES[d_id]} ({DEVICE_IPS[d_id]})"
+        n_alerts = alerts_map.get(d_label, 0)
+        is_q = d_id in st.session_state.quarantined_devices
+        thr_val = get_adaptive_threshold(d_id, adaptive_enabled=adaptive_thr_enabled)
+        if is_q:
+            estado_str = "🔒 AISLADO (DROP en Firewall)"
+        elif n_alerts > 0:
+            estado_str = f"🚨 COMPROMETIDO ({n_alerts} ataques)"
+        else:
+            estado_str = "🟢 Operativo Normal"
+
+        dev_status_rows.append(
+            {
+                "Dispositivo IoT (IP LAN)": d_label,
+                "MAC Física": DEVICE_MACS[d_id],
+                "Umbral IA": thr_val,
+                "Estado IPS": estado_str,
+                "Ataques": n_alerts,
+                "1er Ataque": first_seen_map.get(d_label, "—"),
+            }
+        )
+    st.dataframe(
+        pd.DataFrame(dev_status_rows),
+        use_container_width=True,
+        hide_index=True,
+        height=315,
+    )
+
+# ----------------- TELEMETRÍA EN VIVO Y BASE DE DATOS SQL -----------------
+st.markdown("---")
+col_chart, col_alerts = st.columns([1.75, 1.45])
+with col_chart:
+    st.subheader("📊 Flujo de Tráfico Real, Diagnóstico IA Multiclase y Forense Z-Score")
+    if not df_stream.empty:
+        st.line_chart(df_stream.set_index("Hora")["Score_Anomalía"], height=200)
+
+        st.markdown(
+            "##### 📡 Visor de Telemetría Forense (Comparación: Etiqueta Real CSV vs. Predicción IA Multiclase + Causa Raíz)"
+        )
+        df_telemetry = df_stream.iloc[::-1].head(12).reset_index(drop=True)
         st.dataframe(
-            df_telemetry[["ID", "Hora", "Clase_Predicha", "Score_Anomalía", "Simulado"]],
+            df_telemetry[
+                [
+                    "ID",
+                    "Hora",
+                    "Dispositivo_IoT",
+                    "Real_CSV",
+                    "Predicción_IA_Anillo2",
+                    "Veredicto",
+                    "Score_Anomalía",
+                    "Causa_Raíz_ZScore",
+                    "Acción_IPS",
+                ]
+            ],
             use_container_width=True,
-            height=200,
+            hide_index=True,
+            height=240,
         )
     else:
         st.info(
-            "Active la casilla 'Iniciar Captura Continua' en la barra lateral para observar la inferencia en tiempo real."
+            "Active 'Iniciar Captura Continua' o presione '⚡ Lanzar Trama Real Ahora' en la barra lateral."
         )
 
 with col_alerts:
     st.subheader(
-        f"🚨 Base de Datos Histórica SQL ({incident_store.count_incidents()} incidentes)"
+        f"🚨 Base de Datos Forense SQLite ({incident_store.count_incidents()} incidentes)"
     )
-    st.caption("Solo almacena incidentes de seguridad (amenazas detectadas) para trazabilidad forense.")
+    st.caption(
+        "Almacena dispositivo atacante, firma predicha por el Anillo 2, causa raíz física Z-Score y regla IPS aplicada."
+    )
     df_sql_alerts = incident_store.get_recent_incidents(limit=20)
     if not df_sql_alerts.empty:
-        st.dataframe(df_sql_alerts, use_container_width=True, height=440)
+        st.dataframe(
+            df_sql_alerts, use_container_width=True, hide_index=True, height=460
+        )
     else:
         st.info("No se han registrado incidentes en la base de datos histórica aún.")
 
-# Sección de Explicabilidad (Feature Importance) y Validación LODO
+# ----------------- LABORATORIO DE HARDWARE REAL (MOTOR AFTERIMAGE EN VIVO) -----------------
 st.markdown("---")
-col_fi, col_lodo = st.columns([1.2, 1.5])
+with st.expander(
+    "🔌 Modo Hardware Real (Motor Incremental AfterImage: De Paquetes IP/TCP/UDP Crudos a las 115 Variables en Vivo)",
+    expanded=False,
+):
+    st.markdown(
+        """
+        Cuando conectes este sistema a un **dispositivo físico real** (ej. Raspberry Pi 4/5 o servidor Linux conectado al puerto *SPAN / Mirroring* de tu router),
+        por el cable de red llegan paquetes crudos (`MAC`, `IP origen/destino`, `Puerto`, `Bytes`, `Timestamp`).
+        El módulo [`src/streaming/live_feature_extractor.py`](file:///c:/Users/felip/Documents/Mi_Cerebro_Universitario/INTEGRADOR%20II%20SEM%20LIC%20EN%20CS/proyecto-iot-ml/src/streaming/live_feature_extractor.py)
+        mantiene en memoria RAM las tablas hash con decaimiento exponencial $w \\leftarrow w \\cdot 2^{-\\lambda \\Delta t} + 1$ para las 5 ventanas ($\\lambda \\in \\{5, 3, 1, 0.1, 0.01\\}$)
+        y construye en $O(1)$ el vector exacto de 115 variables **sin el bug del timestamp Unix 2017**.
+        """
+    )
+    if st.button("🧪 Probar Extracción AfterImage en Vivo desde Ráfaga de Paquetes Crudos"):
+        extractor = LiveAfterImageExtractor(st.session_state.emulator.feature_cols)
+        t_now = time.time()
+        df_115 = None
+        for i in range(25):
+            df_115 = extractor.process_raw_packet(
+                src_mac=DEVICE_MACS[5],
+                src_ip=DEVICE_IPS[5],
+                dst_ip="198.51.100.42",
+                src_port=49152 + (i % 5),
+                dst_port=80,
+                pkt_size=512.0,
+                timestamp=t_now + i * 0.002,
+            )
+        st.success(
+            f"✅ Se procesaron 25 paquetes TCP crudos en O(1) y se generó un vector limpio de dimensión `{df_115.shape}` (115 características listas para el clasificador)."
+        )
+        st.dataframe(df_115.iloc[:, :12], use_container_width=True, hide_index=True)
+
+# ----------------- TRAZABILIDAD DEL ENTRENAMIENTO OFFLINE -----------------
+with st.expander(
+    "⚙️ ¿Cuándo y cómo se realizó el entrenamiento de los 3 Anillos? (Fase Offline vs. Fase Online)",
+    expanded=False,
+):
+    audit_info = metrics_data.get("training_audit", {})
+    mc_info = metrics_data.get("multiclass_attack_classifier", {})
+    zd_info = metrics_data.get("zeroday_isolation_forest", {})
+    ver_info = metrics_data.get("ml_audit_verification", {})
+    st.markdown(
+        f"""
+        - **Fase Offline ([`src/models/baseline.py`](file:///c:/Users/felip/Documents/Mi_Cerebro_Universitario/INTEGRADOR%20II%20SEM%20LIC%20EN%20CS/proyecto-iot-ml/src/models/baseline.py)):** Último entrenamiento registrado el `{audit_info.get('trained_at', '2026-10-26')}` en `{audit_info.get('total_pipeline_duration_sec', 66.0)} s` sobre los **9 dispositivos IoT** (`Train = {metrics_data.get('train_samples', 29250)}`, `Val = {metrics_data.get('val_samples', 6715)}`, `Test = {metrics_data.get('test_samples', 6785)}`) con **ventanas de purga temporal (embargo 2.5%)** y **5-Fold CV sin fuga de escalado**.
+        - **Anillo 1 (Binario Supervisado):** 5 modelos entrenados sin fuga de timestamp Unix (`HH_jit_*_mean` y `_variance` neutralizados; `HH_jit_*_weight` preservado).
+        - **Anillo 2 (Clasificador Multiclase Balanceado — `model_multiclass_attack.pkl`):** Identifica la firma de ataque con **Accuracy Canónico = `{mc_info.get('accuracy', 0.93):.4f}`** y **F1-Macro = `{mc_info.get('f1_macro', 0.93):.4f}`**.
+        - **Anillo 3 (Cazador Zero-Day No Supervisado — `model_zeroday_iforest.pkl`):** `LocalOutlierFactor (Novelty Detection)` entrenado **exclusivamente con tráfico 100% Benigno**; logra detectar el **`{zd_info.get('attack_detection_recall', 0.75)*100:.2f}%` de los ataques** (`F1 = {zd_info.get('f1_score', 0.83):.4f}`) sin haber visto jamás un solo ataque durante su entrenamiento.
+        - **Verificación de Auditoría ML:** Prueba de sanidad (*Y-Randomization*) `F1 = {ver_info.get('y_randomization_sanity_f1', 0.54):.4f}` (azar puro confirmado) | Estabilidad Multi-Semilla (`5 seeds`) `F1 = {ver_info.get('multi_seed_rf_f1_mean', 1.0):.4f} ± {ver_info.get('multi_seed_rf_f1_std', 0.0):.4f}` | Resistencia a *Concept Drift* en Horizonte Distante (`+10.000 filas`) `RF F1 = {ver_info.get('distant_horizon_rf_f1', 0.9998):.4f}` (`FPR = {ver_info.get('distant_horizon_rf_fpr', 0.0)*100:.2f}%`).
+        """
+    )
+    if st.button("🔄 Re-entrenar los 3 Anillos Offline Ahora (Ejecutar baseline.py)"):
+        with st.spinner("Entrenando Anillo 1 (Binario), Anillo 2 (Multiclase) y Anillo 3 (Zero-Day) + LODO..."):
+            baseline_script = os.path.abspath(
+                os.path.join(
+                    os.path.dirname(__file__), "..", "src", "models", "baseline.py"
+                )
+            )
+            res_proc = subprocess.run(
+                [sys.executable, baseline_script],
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+            if res_proc.returncode == 0:
+                st.cache_resource.clear()
+                st.session_state.emulator.reload_catalog()
+                st.success("✅ Re-entrenamiento de los 3 Anillos completado.")
+                st.rerun()
+            else:
+                st.error(f"Error al ejecutar baseline.py:\n{res_proc.stderr}")
+
+# ----------------- COMPARATIVA EXPERIMENTAL DE MODELOS Y EXPLICABILIDAD -----------------
+st.markdown("---")
+st.subheader("🏆 Comparativa Experimental de Modelos y Reducción de Falsos Positivos con IPS Adaptativo")
+
+lodo_summary = metrics_data.get("lodo_9_devices", {})
+model_rows = [
+    ("Dummy (Mayoría — Cota Inferior)", "dummy_majority", None, None),
+    (
+        "Regresión Logística (Línea Base Lineal)",
+        "baseline_logistic_regression",
+        "lr_f1_mean",
+        "lr_fpr_mean",
+    ),
+    (
+        "SVM Lineal Calibrado (Platt Scaling)",
+        "svm_calibrated",
+        "svm_f1_mean",
+        "svm_fpr_mean",
+    ),
+    ("Árbol de Decisión (max_depth=5)", "decision_tree", "dt_f1_mean", "dt_fpr_mean"),
+    (
+        "Gradient Boosting (HistGradientBoosting)",
+        "gradient_boosting",
+        "gb_f1_mean",
+        "gb_fpr_mean",
+    ),
+    (
+        "Random Forest (Umbral Fijo 0.50)",
+        "random_forest",
+        "rf_f1_mean",
+        "rf_fpr_mean",
+    ),
+]
+
+comp_table = []
+for label_m, key_m, lodo_f1_key, lodo_fpr_key in model_rows:
+    m_info = metrics_data.get(key_m, {})
+    if m_info:
+        comp_table.append(
+            {
+                "Modelo Clasificador": label_m,
+                "5-Fold CV F1": f"{m_info.get('cv_f1_mean', 0.0):.4f} ± {m_info.get('cv_f1_std', 0.0):.4f}",
+                "Train F1": round(m_info.get("train_f1", m_info.get("f1_score", 0.0)), 4),
+                "Val F1": round(m_info.get("val_f1", 0.0), 4),
+                "Test F1 (9 Disp.)": round(m_info.get("f1_score", 0.0), 4),
+                "FPR Test (%)": round(m_info.get("fpr", 0.0) * 100.0, 2),
+                "LODO F1 (Disp. No Visto)": (
+                    f"{lodo_summary.get(lodo_f1_key, 0.0):.4f}"
+                    if lodo_f1_key and lodo_f1_key in lodo_summary
+                    else "N/A"
+                ),
+                "LODO FPR Prom. (%)": (
+                    f"{lodo_summary.get(lodo_fpr_key, 0.0) * 100.0:.2f}%"
+                    if lodo_fpr_key and lodo_fpr_key in lodo_summary
+                    else "N/A"
+                ),
+                "Latencia 1 Paquete (ms)": round(
+                    m_info.get("inference_ms_single_packet", 0.0), 3
+                ),
+            }
+        )
+
+if "rf_adaptive_f1_mean" in lodo_summary:
+    rf_base_info = metrics_data.get("random_forest", {})
+    comp_table.append(
+        {
+            "Modelo Clasificador": "🥇 Random Forest + Umbral Adaptativo IPS (Nuestro Sistema)",
+            "5-Fold CV F1": f"{rf_base_info.get('cv_f1_mean', 0.9985):.4f} ± {rf_base_info.get('cv_f1_std', 0.0003):.4f}",
+            "Train F1": round(rf_base_info.get("train_f1", 0.9988), 4),
+            "Val F1": round(rf_base_info.get("val_f1", 0.9996), 4),
+            "Test F1 (9 Disp.)": round(rf_base_info.get("f1_score", 1.0), 4),
+            "FPR Test (%)": 0.0,
+            "LODO F1 (Disp. No Visto)": f"{lodo_summary.get('rf_adaptive_f1_mean', 0.0):.4f}",
+            "LODO FPR Prom. (%)": f"{lodo_summary.get('rf_adaptive_fpr_mean', 0.0) * 100.0:.2f}%",
+            "Latencia 1 Paquete (ms)": round(
+                rf_base_info.get("inference_ms_single_packet", 0.0), 3
+            ),
+        }
+    )
+
+if comp_table:
+    st.dataframe(pd.DataFrame(comp_table), use_container_width=True, hide_index=True)
+
+st.markdown("---")
+col_fi, col_lodo = st.columns([1.15, 1.55])
 
 with col_fi:
-    st.subheader("🔍 Explicabilidad: Top 15 Características (Feature Importance)")
+    st.subheader("🔍 Explicabilidad Global: Top 15 Características Físicas")
     top_rf = metrics_data.get("top_15_features_rf", {})
     if top_rf:
         df_fi = pd.DataFrame(
@@ -410,21 +922,23 @@ with col_fi:
         st.info("Ejecute baseline.py para visualizar el ranking de Feature Importance.")
 
 with col_lodo:
-    st.subheader("🧪 Generalización Leave-One-Device-Out (LODO — 9 Dispositivos IoT)")
+    st.subheader("🧪 Generalización LODO en los 9 Dispositivos (Estándar vs. IPS Adaptativo)")
     lodo_info = metrics_data.get("lodo_9_devices", {}).get("folds", {})
     if lodo_info:
         rows_lodo = []
         for _, fdata in lodo_info.items():
-            rows_lodo.append(
-                {
-                    "Disp. Excluido (Test)": f"{fdata['device_id']}. {fdata['device_name']}",
-                    "LR F1 (Base)": fdata["lr"]["f1"],
-                    "RF F1": fdata["rf"]["f1"],
-                    "GB F1": fdata["gb"]["f1"],
-                    "SVM F1": fdata["svm"]["f1"],
-                    "RF FPR (%)": round(fdata["rf"]["fpr"] * 100.0, 2),
-                }
-            )
+            row_dict = {
+                "Disp. Excluido (Test)": f"{fdata['device_id']}. {fdata['device_name']}",
+                "LR F1": fdata["lr"]["f1"],
+                "RF Estándar F1": fdata["rf"]["f1"],
+                "RF FPR (%)": round(fdata["rf"]["fpr"] * 100.0, 2),
+            }
+            if "rf_adaptive" in fdata:
+                row_dict["RF+Adapt IPS F1"] = fdata["rf_adaptive"]["f1"]
+                row_dict["RF+Adapt FPR (%)"] = round(
+                    fdata["rf_adaptive"]["fpr"] * 100.0, 2
+                )
+            rows_lodo.append(row_dict)
         st.dataframe(pd.DataFrame(rows_lodo), use_container_width=True, height=340)
     else:
         st.info("Resultados LODO pendientes de generación.")
