@@ -1,11 +1,15 @@
-"""Motor incremental en tiempo real (AfterImage / Kitsune) para extraer las 115 características desde paquetes de red crudos."""
+"""Extractor experimental. Equivalencia numérica con N-BaIoT aún no certificada.
+
+No usar su salida para bloquear equipos ni atribuir métricas del benchmark a tráfico real.
+La aproximación de covarianza necesita validación contra el extractor de referencia.
+"""
 
 import math
 from typing import Dict, List, Tuple, Any
 import numpy as np
 import pandas as pd
 
-# Los 5 factores de decaimiento exponencial de N-BaIoT (horizontes: ~100ms, 500ms, 1.5s, 10s, 60s)
+# Decaimiento 2**(-lambda*dt): semividas 0.2, 1/3, 1, 10 y 100 segundos.
 LAMBDAS: List[Tuple[str, float]] = [
     ("L5", 5.0),
     ("L3", 3.0),
@@ -56,14 +60,13 @@ class DampedStat1D:
 
 class LiveAfterImageExtractor:
     """
-    Traductor en tiempo real de paquetes IP/TCP/UDP crudos al vector exacto de 115 características
-    del estándar N-BaIoT (Meidan et al., 2018), corrigiendo de raíz el bug de inicialización
-    Unix Epoch en el jitter (dt=0 en el primer paquete de cada flujo).
-    Listo para conectarse a Scapy / libpcap / sockets raw en un Gateway Linux o Raspberry Pi.
+    Prototipo de estadísticas de paquetes; no implementa captura de red.
+    El esquema tiene 115 columnas, lo que no certifica equivalencia con N-BaIoT.
     """
 
     def __init__(self, feature_columns: List[str]) -> None:
         self.feature_columns = list(feature_columns)
+        self.production_ready = False
         self.mi_stats: Dict[Tuple[str, str], DampedStat1D] = {}
         self.h_stats: Dict[Tuple[str, str], DampedStat1D] = {}
         self.hh_stats: Dict[Tuple[str, str], DampedStat1D] = {}
@@ -165,7 +168,7 @@ class LiveAfterImageExtractor:
             w_jit, _, _ = self._get_stat(
                 self.hh_jit_stats, (hh_fwd, lam_label)
             ).update(dt_hh, timestamp, lam_val)
-            feat_map[f"HH_jit_{lam_label}_weight"] = 0.0
+            feat_map[f"HH_jit_{lam_label}_weight"] = w_jit
             feat_map[f"HH_jit_{lam_label}_mean"] = 0.0
             feat_map[f"HH_jit_{lam_label}_variance"] = 0.0
 
@@ -187,7 +190,10 @@ class LiveAfterImageExtractor:
             feat_map[f"HpHp_{lam_label}_covariance"] = cov_hp
             feat_map[f"HpHp_{lam_label}_pcc"] = pcc_hp
 
-        ordered_vals = [float(feat_map.get(col, 0.0)) for col in self.feature_columns]
+        missing = set(self.feature_columns) - set(feat_map)
+        if missing:
+            raise ValueError(f"Características no implementadas: {sorted(missing)}")
+        ordered_vals = [float(feat_map[col]) for col in self.feature_columns]
         return pd.DataFrame(
             [np.array(ordered_vals, dtype=np.float64)], columns=self.feature_columns
         )

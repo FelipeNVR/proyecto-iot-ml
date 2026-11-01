@@ -1,4 +1,4 @@
-"""Dashboard IPS de 3 Anillos (Binario + Multiclase 10 Ataques + Zero-Day IsolationForest), Forense Z-Score y Cortafuegos Real."""
+"""Dashboard IPS de 3 Anillos (Binario + Multiclase 10 Ataques + Zero-Day LocalOutlierFactor), Forense Z-Score y Cortafuegos Real."""
 
 import os
 import sys
@@ -146,7 +146,7 @@ def load_verified_models(registry_dir: str):
         if hasattr(mc_model, "n_jobs"):
             mc_model.n_jobs = 1
 
-    # Cargar Anillo 3 (Detector No Supervisado Zero-Day IsolationForest)
+    # Cargar Anillo 3 (Detector No Supervisado Zero-Day LocalOutlierFactor)
     zd_model = None
     zd_path = os.path.join(registry_dir, "model_zeroday_iforest.pkl")
     if os.path.exists(zd_path) and "model_zeroday_iforest.pkl" in manifest:
@@ -257,9 +257,11 @@ if st.sidebar.button("Cerrar Sesión", use_container_width=True):
 
 st.title("🛡️ Sistema IPS Centralizado de Defensa IoT (Arquitectura de 3 Anillos)")
 st.caption(
-    "Anillo 1: Clasificador Binario con Umbral Adaptativo | Anillo 2: Clasificador Multiclase de Firma (10 Ataques Mirai/BASHLITE) | "
-    "Anillo 3: Cazador Zero-Day (IsolationForest No Supervisado) + Bloqueo Automático de Paciente Cero y Forense Z-Score."
+    "Demo sobre vectores del catálogo N-BaIoT: detector binario, clasificación de ataques y detector de novedades LOF."
 )
+st.info("Esta aplicación reproduce capturas guardadas; no está capturando tu router. "
+        "La validación con tu IoT y la equivalencia del extractor están pendientes. "
+        "Los resultados de laboratorio no autorizan bloqueo automático en producción.")
 
 # Carga segura de los 3 anillos de modelos
 try:
@@ -302,7 +304,7 @@ auto_ips_quarantine = st.sidebar.toggle(
     help="Aísla automáticamente en el Firewall del Router (iptables/nftables) a cualquier dispositivo que lance un ataque confirmado.",
 )
 enable_zeroday_ring = st.sidebar.toggle(
-    "Anillo 3: Detector Zero-Day (IsolationForest)",
+    "Anillo 3: Detector Zero-Day (LocalOutlierFactor)",
     value=True,
     help="Detecta anomalías desconocidas usando un modelo no supervisado entrenado exclusivamente con tráfico benigno.",
 )
@@ -349,7 +351,7 @@ def evaluate_and_record_packet(packet: dict) -> dict:
     threshold = get_adaptive_threshold(dev_id, adaptive_enabled=adaptive_thr_enabled)
     pred_ring1 = 1 if prob >= threshold else 0
 
-    # Anillo 3: Detector No Supervisado Zero-Day (IsolationForest)
+    # Anillo 3: Detector No Supervisado Zero-Day (LocalOutlierFactor)
     zeroday_flag = False
     if enable_zeroday_ring and zeroday_model is not None:
         zd_pred = int(zeroday_model.predict(feat_scaled)[0])  # -1 = anomalía
@@ -434,7 +436,7 @@ def evaluate_and_record_packet(packet: dict) -> dict:
 # ----------------- BARRA LATERAL: CAPTURA CONTINUA E INYECCIÓN MANUAL -----------------
 st.sidebar.markdown("---")
 st.sidebar.subheader("📡 1. Monitoreo Continuo (Router Mirroring)")
-run_sim = st.sidebar.toggle("Iniciar Captura Continua (En Vivo 🟢)", value=False)
+run_sim = st.sidebar.toggle("Reproducir catálogo N-BaIoT (no captura de red)", value=False)
 anomaly_prob = st.sidebar.slider(
     "Frecuencia de Tramas de Ataque", 0.0, 0.8, 0.20, step=0.05
 )
@@ -751,7 +753,7 @@ with col_alerts:
 # ----------------- LABORATORIO DE HARDWARE REAL (MOTOR AFTERIMAGE EN VIVO) -----------------
 st.markdown("---")
 with st.expander(
-    "🔌 Modo Hardware Real (Motor Incremental AfterImage: De Paquetes IP/TCP/UDP Crudos a las 115 Variables en Vivo)",
+    "🔌 Prototipo de extracción (ejemplo sintético, no captura real)",
     expanded=False,
 ):
     st.markdown(
@@ -760,10 +762,10 @@ with st.expander(
         por el cable de red llegan paquetes crudos (`MAC`, `IP origen/destino`, `Puerto`, `Bytes`, `Timestamp`).
         El módulo [`src/streaming/live_feature_extractor.py`](file:///c:/Users/felip/Documents/Mi_Cerebro_Universitario/INTEGRADOR%20II%20SEM%20LIC%20EN%20CS/proyecto-iot-ml/src/streaming/live_feature_extractor.py)
         mantiene en memoria RAM las tablas hash con decaimiento exponencial $w \\leftarrow w \\cdot 2^{-\\lambda \\Delta t} + 1$ para las 5 ventanas ($\\lambda \\in \\{5, 3, 1, 0.1, 0.01\\}$)
-        y construye en $O(1)$ el vector exacto de 115 variables **sin el bug del timestamp Unix 2017**.
+        y construye en $O(1)$ el vector experimental de 115 variables, pendiente de equivalencia numérica **sin el bug del timestamp Unix 2017**.
         """
     )
-    if st.button("🧪 Probar Extracción AfterImage en Vivo desde Ráfaga de Paquetes Crudos"):
+    if st.button("🧪 Probar forma del vector con 25 ejemplos sintéticos"):
         extractor = LiveAfterImageExtractor(st.session_state.emulator.feature_cols)
         t_now = time.time()
         df_115 = None
@@ -778,7 +780,7 @@ with st.expander(
                 timestamp=t_now + i * 0.002,
             )
         st.success(
-            f"✅ Se procesaron 25 paquetes TCP crudos en O(1) y se generó un vector limpio de dimensión `{df_115.shape}` (115 características listas para el clasificador)."
+            f"✅ Se procesaron 25 ejemplos de cabeceras generados por código y se generó un vector limpio de dimensión `{df_115.shape}` (características experimentales; no valida tráfico de hardware real)."
         )
         st.dataframe(df_115.iloc[:, :12], use_container_width=True, hide_index=True)
 
@@ -797,112 +799,29 @@ with st.expander(
         - **Anillo 1 (Binario Supervisado):** 5 modelos entrenados sin fuga de timestamp Unix (`HH_jit_*_mean` y `_variance` neutralizados; `HH_jit_*_weight` preservado).
         - **Anillo 2 (Clasificador Multiclase Balanceado — `model_multiclass_attack.pkl`):** Identifica la firma de ataque con **Accuracy Canónico = `{mc_info.get('accuracy', 0.93):.4f}`** y **F1-Macro = `{mc_info.get('f1_macro', 0.93):.4f}`**.
         - **Anillo 3 (Cazador Zero-Day No Supervisado — `model_zeroday_iforest.pkl`):** `LocalOutlierFactor (Novelty Detection)` entrenado **exclusivamente con tráfico 100% Benigno**; logra detectar el **`{zd_info.get('attack_detection_recall', 0.75)*100:.2f}%` de los ataques** (`F1 = {zd_info.get('f1_score', 0.83):.4f}`) sin haber visto jamás un solo ataque durante su entrenamiento.
-        - **Verificación de Auditoría ML:** Prueba de sanidad (*Y-Randomization*) `F1 = {ver_info.get('y_randomization_sanity_f1', 0.54):.4f}` (azar puro confirmado) | Estabilidad Multi-Semilla (`5 seeds`) `F1 = {ver_info.get('multi_seed_rf_f1_mean', 1.0):.4f} ± {ver_info.get('multi_seed_rf_f1_std', 0.0):.4f}` | Resistencia a *Concept Drift* en Horizonte Distante (`+10.000 filas`) `RF F1 = {ver_info.get('distant_horizon_rf_f1', 0.9998):.4f}` (`FPR = {ver_info.get('distant_horizon_rf_fpr', 0.0)*100:.2f}%`).
+        - **Verificación de Auditoría ML:** Prueba de sanidad (*Y-Randomization*) `F1 = {ver_info.get('y_randomization_sanity_f1', 0.54):.4f}` (control exploratorio; una sola permutación) | Estabilidad Multi-Semilla (`5 seeds`) `F1 = {ver_info.get('multi_seed_rf_f1_mean', 1.0):.4f} ± {ver_info.get('multi_seed_rf_f1_std', 0.0):.4f}` | Muestra posterior de las mismas capturas (`+10.000 filas`) `RF F1 = {ver_info.get('distant_horizon_rf_f1', 0.9998):.4f}` (`FPR = {ver_info.get('distant_horizon_rf_fpr', 0.0)*100:.2f}%`).
         """
     )
-    if st.button("🔄 Re-entrenar los 3 Anillos Offline Ahora (Ejecutar baseline.py)"):
-        with st.spinner("Entrenando Anillo 1 (Binario), Anillo 2 (Multiclase) y Anillo 3 (Zero-Day) + LODO..."):
-            baseline_script = os.path.abspath(
-                os.path.join(
-                    os.path.dirname(__file__), "..", "src", "models", "baseline.py"
-                )
-            )
-            res_proc = subprocess.run(
-                [sys.executable, baseline_script],
-                capture_output=True,
-                text=True,
-                check=False,
-            )
-            if res_proc.returncode == 0:
-                st.cache_resource.clear()
-                st.session_state.emulator.reload_catalog()
-                st.success("✅ Re-entrenamiento de los 3 Anillos completado.")
-                st.rerun()
-            else:
-                st.error(f"Error al ejecutar baseline.py:\n{res_proc.stderr}")
+    st.info('El entrenamiento histórico conserva limitaciones conocidas. Use el protocolo por dispositivos y periodos documentado en VALIDACION_REAL.md; sus candidatos no se promueven automáticamente.')
 
 # ----------------- COMPARATIVA EXPERIMENTAL DE MODELOS Y EXPLICABILIDAD -----------------
 st.markdown("---")
 st.subheader("🏆 Comparativa Experimental de Modelos y Reducción de Falsos Positivos con IPS Adaptativo")
 
-lodo_summary = metrics_data.get("lodo_9_devices", {})
-model_rows = [
-    ("Dummy (Mayoría — Cota Inferior)", "dummy_majority", None, None),
-    (
-        "Regresión Logística (Línea Base Lineal)",
-        "baseline_logistic_regression",
-        "lr_f1_mean",
-        "lr_fpr_mean",
-    ),
-    (
-        "SVM Lineal Calibrado (Platt Scaling)",
-        "svm_calibrated",
-        "svm_f1_mean",
-        "svm_fpr_mean",
-    ),
-    ("Árbol de Decisión (max_depth=5)", "decision_tree", "dt_f1_mean", "dt_fpr_mean"),
-    (
-        "Gradient Boosting (HistGradientBoosting)",
-        "gradient_boosting",
-        "gb_f1_mean",
-        "gb_fpr_mean",
-    ),
-    (
-        "Random Forest (Umbral Fijo 0.50)",
-        "random_forest",
-        "rf_f1_mean",
-        "rf_fpr_mean",
-    ),
-]
+from src.models.reporting import historical_comparison, multiclass_tasks
+st.caption('Resultados históricos de desarrollo. Valores vacíos: esa configuración no fue evaluada. Las tasas se expresan de 0 a 1.')
+st.dataframe(pd.DataFrame(historical_comparison(metrics_data)), hide_index=True)
+st.dataframe(pd.DataFrame(multiclass_tasks(metrics_data.get('multiclass_attack_classifier', {}))), hide_index=True)
 
-comp_table = []
-for label_m, key_m, lodo_f1_key, lodo_fpr_key in model_rows:
-    m_info = metrics_data.get(key_m, {})
-    if m_info:
-        comp_table.append(
-            {
-                "Modelo Clasificador": label_m,
-                "5-Fold CV F1": f"{m_info.get('cv_f1_mean', 0.0):.4f} ± {m_info.get('cv_f1_std', 0.0):.4f}",
-                "Train F1": round(m_info.get("train_f1", m_info.get("f1_score", 0.0)), 4),
-                "Val F1": round(m_info.get("val_f1", 0.0), 4),
-                "Test F1 (9 Disp.)": round(m_info.get("f1_score", 0.0), 4),
-                "FPR Test (%)": round(m_info.get("fpr", 0.0) * 100.0, 2),
-                "LODO F1 (Disp. No Visto)": (
-                    f"{lodo_summary.get(lodo_f1_key, 0.0):.4f}"
-                    if lodo_f1_key and lodo_f1_key in lodo_summary
-                    else "N/A"
-                ),
-                "LODO FPR Prom. (%)": (
-                    f"{lodo_summary.get(lodo_fpr_key, 0.0) * 100.0:.2f}%"
-                    if lodo_fpr_key and lodo_fpr_key in lodo_summary
-                    else "N/A"
-                ),
-                "Latencia 1 Paquete (ms)": round(
-                    m_info.get("inference_ms_single_packet", 0.0), 3
-                ),
-            }
-        )
-
-if "rf_adaptive_f1_mean" in lodo_summary:
-    rf_base_info = metrics_data.get("random_forest", {})
-    comp_table.append(
-        {
-            "Modelo Clasificador": "🥇 Random Forest + Umbral Adaptativo IPS (Nuestro Sistema)",
-            "5-Fold CV F1": f"{rf_base_info.get('cv_f1_mean', 0.9985):.4f} ± {rf_base_info.get('cv_f1_std', 0.0003):.4f}",
-            "Train F1": round(rf_base_info.get("train_f1", 0.9988), 4),
-            "Val F1": round(rf_base_info.get("val_f1", 0.9996), 4),
-            "Test F1 (9 Disp.)": round(rf_base_info.get("f1_score", 1.0), 4),
-            "FPR Test (%)": 0.0,
-            "LODO F1 (Disp. No Visto)": f"{lodo_summary.get('rf_adaptive_f1_mean', 0.0):.4f}",
-            "LODO FPR Prom. (%)": f"{lodo_summary.get('rf_adaptive_fpr_mean', 0.0) * 100.0:.2f}%",
-            "Latencia 1 Paquete (ms)": round(
-                rf_base_info.get("inference_ms_single_packet", 0.0), 3
-            ),
-        }
-    )
-
-if comp_table:
-    st.dataframe(pd.DataFrame(comp_table), use_container_width=True, hide_index=True)
+rigorous_dir = os.path.join(os.path.dirname(REGISTRY_DIR), 'experiments', 'rigorous_v1')
+rigorous_summary = os.path.join(rigorous_dir, 'summary.csv')
+st.subheader('Evaluación por periodos, dispositivos y familias excluidas')
+if os.path.exists(rigorous_summary):
+    rigorous_results = pd.read_csv(rigorous_summary)
+    st.caption('Capturas reales de laboratorio N-BaIoT. Calibración separada. Pendiente validación con capturas locales independientes; no certifica producción.')
+    st.dataframe(rigorous_results, hide_index=True)
+else:
+    st.info('Benchmark exigente todavía sin resultados completos. No se sustituyen por los resultados históricos.')
 
 st.markdown("---")
 col_fi, col_lodo = st.columns([1.15, 1.55])

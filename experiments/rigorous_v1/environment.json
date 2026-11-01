@@ -1,0 +1,7 @@
+{
+  "python": "3.13.13",
+  "sklearn": "1.9.0",
+  "numpy": "2.5.2",
+  "pandas": "3.0.5",
+  "code_sha256": "5286b35314d5dd3ae3df99e20bf78e8d05d57b4e4cd5197ed1b59f83ac16a6ae"
+}

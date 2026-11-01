@@ -1,0 +1,3562 @@
+[
+  {
+    "file": "1.benign.csv",
+    "sha256": "866083fd18f52b6ddde94e47b4d27925432bb83d5f547868f143d87c50354650",
+    "size_bytes": 46537568,
+    "rows": 49548,
+    "nonfinite_rows_full_file": 0,
+    "nonfinite_selected_rows_excluded": 0,
+    "ranges": [
+      [
+        "train",
+        4954,
+        5954
+      ],
+      [
+        "train",
+        14864,
+        15864
+      ],
+      [
+        "calibration",
+        24774,
+        25774
+      ],
+      [
+        "calibration",
+        32206,
+        33206
+      ],
+      [
+        "test",
+        39638,
+        40638
+      ],
+      [
+        "test",
+        47070,
+        48070
+      ]
+    ]
+  },
+  {
+    "file": "1.gafgyt.combo.csv",
+    "sha256": "99755635b255c1b05f1605259dbbf3f77200fc284930be888d4c3423a95815d9",
+    "size_bytes": 105833909,
+    "rows": 59718,
+    "nonfinite_rows_full_file": 0,
+    "nonfinite_selected_rows_excluded": 0,
+    "ranges": [
+      [
+        "train",
+        5971,
+        6171
+      ],
+      [
+        "train",
+        17915,
+        18115
+      ],
+      [
+        "calibration",
+        29859,
+        30059
+      ],
+      [
+        "calibration",
+        38816,
+        39016
+      ],
+      [
+        "test",
+        47774,
+        47974
+      ],
+      [
+        "test",
+        56732,
+        56932
+      ]
+    ]
+  },
+  {
+    "file": "1.gafgyt.junk.csv",
+    "sha256": "aafbfc32aef267dee69d9937a69e9561a636762a02a19bcbf437812325863842",
+    "size_bytes": 49322665,
+    "rows": 29068,
+    "nonfinite_rows_full_file": 0,
+    "nonfinite_selected_rows_excluded": 0,
+    "ranges": [
+      [
+        "train",
+        2906,
+        3106
+      ],
+      [
+        "train",
+        8720,
+        8920
+      ],
+      [
+        "calibration",
+        14534,
+        14734
+      ],
+      [
+        "calibration",
+        18894,
+        19094
+      ],
+      [
+        "test",
+        23254,
+        23454
+      ],
+      [
+        "test",
+        27614,
+        27814
+      ]
+    ]
+  },
+  {
+    "file": "1.gafgyt.scan.csv",
+    "sha256": "cca1095c1872c20a299fa522987f50bf9ec9828e2bd6983aef604ddc8a8eb2b5",
+    "size_bytes": 40177901,
+    "rows": 29849,
+    "nonfinite_rows_full_file": 0,
+    "nonfinite_selected_rows_excluded": 0,
+    "ranges": [
+      [
+        "train",
+        2984,
+        3184
+      ],
+      [
+        "train",
+        8954,
+        9154
+      ],
+      [
+        "calibration",
+        14924,
+        15124
+      ],
+      [
+        "calibration",
+        19401,
+        19601
+      ],
+      [
+        "test",
+        23879,
+        24079
+      ],
+      [
+        "test",
+        28356,
+        28556
+      ]
+    ]
+  },
+  {
+    "file": "1.gafgyt.tcp.csv",
+    "sha256": "deb5e28f12424c4b8b5fd62706b7609bdaacf38a380b5eb3aa01e292f00af7c1",
+    "size_bytes": 51866227,
+    "rows": 92141,
+    "nonfinite_rows_full_file": 0,
+    "nonfinite_selected_rows_excluded": 0,
+    "ranges": [
+      [
+        "train",
+        9214,
+        9414
+      ],
+      [
+        "train",
+        27642,
+        27842
+      ],
+      [
+        "calibration",
+        46070,
+        46270
+      ],
+      [
+        "calibration",
+        59891,
+        60091
+      ],
+      [
+        "test",
+        73712,
+        73912
+      ],
+      [
+        "test",
+        87533,
+        87733
+      ]
+    ]
+  },
+  {
+    "file": "1.gafgyt.udp.csv",
+    "sha256": "10f3cfff3c04016668a3a4904722bd9a9930bb17fbebaaf3b2dcd4df2b6e7fec",
+    "size_bytes": 59597256,
+    "rows": 105874,
+    "nonfinite_rows_full_file": 0,
+    "nonfinite_selected_rows_excluded": 0,
+    "ranges": [
+      [
+        "train",
+        10587,
+        10787
+      ],
+      [
+        "train",
+        31762,
+        31962
+      ],
+      [
+        "calibration",
+        52937,
+        53137
+      ],
+      [
+        "calibration",
+        68818,
+        69018
+      ],
+      [
+        "test",
+        84699,
+        84899
+      ],
+      [
+        "test",
+        100580,
+        100780
+      ]
+    ]
+  },
+  {
+    "file": "1.mirai.ack.csv",
+    "sha256": "ef411d0b9d9021c209e3c52cf83e3dd628ee3137c370c0a73c741dd3b0375483",
+    "size_bytes": 135498914,
+    "rows": 102195,
+    "nonfinite_rows_full_file": 0,
+    "nonfinite_selected_rows_excluded": 0,
+    "ranges": [
+      [
+        "train",
+        10219,
+        10419
+      ],
+      [
+        "train",
+        30658,
+        30858
+      ],
+      [
+        "calibration",
+        51097,
+        51297
+      ],
+      [
+        "calibration",
+        66426,
+        66626
+      ],
+      [
+        "test",
+        81756,
+        81956
+      ],
+      [
+        "test",
+        97085,
+        97285
+      ]
+    ]
+  },
+  {
+    "file": "1.mirai.scan.csv",
+    "sha256": "33184b64cf3edc279bd8001301409afb1f3b137f380cabf6d8519ee0343d085e",
+    "size_bytes": 107510905,
+    "rows": 107685,
+    "nonfinite_rows_full_file": 0,
+    "nonfinite_selected_rows_excluded": 0,
+    "ranges": [
+      [
+        "train",
+        10768,
+        10968
+      ],
+      [
+        "train",
+        32305,
+        32505
+      ],
+      [
+        "calibration",
+        53842,
+        54042
+      ],
+      [
+        "calibration",
+        69995,
+        70195
+      ],
+      [
+        "test",
+        86148,
+        86348
+      ],
+      [
+        "test",
+        102300,
+        102500
+      ]
+    ]
+  },
+  {
+    "file": "1.mirai.syn.csv",
+    "sha256": "58d4a359b9d0b1bd7f0ce49ba239e18fc0b27a361e8386413a61faec9d99c3e7",
+    "size_bytes": 164633193,
+    "rows": 122573,
+    "nonfinite_rows_full_file": 0,
+    "nonfinite_selected_rows_excluded": 0,
+    "ranges": [
+      [
+        "train",
+        12257,
+        12457
+      ],
+      [
+        "train",
+        36771,
+        36971
+      ],
+      [
+        "calibration",
+        61286,
+        61486
+      ],
+      [
+        "calibration",
+        79672,
+        79872
+      ],
+      [
+        "test",
+        98058,
+        98258
+      ],
+      [
+        "test",
+        116444,
+        116644
+      ]
+    ]
+  },
+  {
+    "file": "1.mirai.udp.csv",
+    "sha256": "bfc623dc77506276ff2af501ce02ecb40f6a6d812c3908fbab0a77776b29a490",
+    "size_bytes": 315304260,
+    "rows": 237665,
+    "nonfinite_rows_full_file": 0,
+    "nonfinite_selected_rows_excluded": 0,
+    "ranges": [
+      [
+        "train",
+        23766,
+        23966
+      ],
+      [
+        "train",
+        71299,
+        71499
+      ],
+      [
+        "calibration",
+        118832,
+        119032
+      ],
+      [
+        "calibration",
+        154482,
+        154682
+      ],
+      [
+        "test",
+        190132,
+        190332
+      ],
+      [
+        "test",
+        225781,
+        225981
+      ]
+    ]
+  },
+  {
+    "file": "1.mirai.udpplain.csv",
+    "sha256": "1f888f66c06dde773e1534cbcf35920717fbf35593583373b365c9b859afff2d",
+    "size_bytes": 120365536,
+    "rows": 81982,
+    "nonfinite_rows_full_file": 0,
+    "nonfinite_selected_rows_excluded": 0,
+    "ranges": [
+      [
+        "train",
+        8198,
+        8398
+      ],
+      [
+        "train",
+        24594,
+        24794
+      ],
+      [
+        "calibration",
+        40991,
+        41191
+      ],
+      [
+        "calibration",
+        53288,
+        53488
+      ],
+      [
+        "test",
+        65585,
+        65785
+      ],
+      [
+        "test",
+        77882,
+        78082
+      ]
+    ]
+  },
+  {
+    "file": "2.benign.csv",
+    "sha256": "87cc2a3d516491e92314d8a515dd2335cfe18c5dbef8a67328d78aed01f4dcfc",
+    "size_bytes": 13953719,
+    "rows": 13113,
+    "nonfinite_rows_full_file": 0,
+    "nonfinite_selected_rows_excluded": 0,
+    "ranges": [
+      [
+        "train",
+        1311,
+        2311
+      ],
+      [
+        "train",
+        3933,
+        4933
+      ],
+      [
+        "calibration",
+        6556,
+        7556
+      ],
+      [
+        "calibration",
+        8523,
+        9523
+      ],
+      [
+        "test",
+        10490,
+        11490
+      ],
+      [
+        "test",
+        12457,
+        13113
+      ]
+    ]
+  },
+  {
+    "file": "2.gafgyt.combo.csv",
+    "sha256": "2d2e95bd76c31d6efc17b47bde802ae711358df6d41e0ba9c19965f6f6dab14f",
+    "size_bytes": 94251568,
+    "rows": 53012,
+    "nonfinite_rows_full_file": 0,
+    "nonfinite_selected_rows_excluded": 0,
+    "ranges": [
+      [
+        "train",
+        5301,
+        5501
+      ],
+      [
+        "train",
+        15903,
+        16103
+      ],
+      [
+        "calibration",
+        26506,
+        26706
+      ],
+      [
+        "calibration",
+        34457,
+        34657
+      ],
+      [
+        "test",
+        42409,
+        42609
+      ],
+      [
+        "test",
+        50361,
+        50561
+      ]
+    ]
+  },
+  {
+    "file": "2.gafgyt.junk.csv",
+    "sha256": "f530a9c8c3582499121595c6bcfd04228dd807e1a20a3a5dcb7ab7c42fd4a258",
+    "size_bytes": 51673314,
+    "rows": 30312,
+    "nonfinite_rows_full_file": 0,
+    "nonfinite_selected_rows_excluded": 0,
+    "ranges": [
+      [
+        "train",
+        3031,
+        3231
+      ],
+      [
+        "train",
+        9093,
+        9293
+      ],
+      [
+        "calibration",
+        15156,
+        15356
+      ],
+      [
+        "calibration",
+        19702,
+        19902
+      ],
+      [
+        "test",
+        24249,
+        24449
+      ],
+      [
+        "test",
+        28796,
+        28996
+      ]
+    ]
+  },
+  {
+    "file": "2.gafgyt.scan.csv",
+    "sha256": "2f4f304637155627a083637e0a0b97dc7077f7ed810fb6f0a93874c629a086a7",
+    "size_bytes": 37108696,
+    "rows": 27494,
+    "nonfinite_rows_full_file": 0,
+    "nonfinite_selected_rows_excluded": 0,
+    "ranges": [
+      [
+        "train",
+        2749,
+        2949
+      ],
+      [
+        "train",
+        8248,
+        8448
+      ],
+      [
+        "calibration",
+        13747,
+        13947
+      ],
+      [
+        "calibration",
+        17871,
+        18071
+      ],
+      [
+        "test",
+        21995,
+        22195
+      ],
+      [
+        "test",
+        26119,
+        26319
+      ]
+    ]
+  },
+  {
+    "file": "2.gafgyt.tcp.csv",
+    "sha256": "0283467266ee6d46d8a9208102246ab48783f47ef9878e5d5a7eb9bcb0a53c3d",
+    "size_bytes": 53485288,
+    "rows": 95021,
+    "nonfinite_rows_full_file": 0,
+    "nonfinite_selected_rows_excluded": 0,
+    "ranges": [
+      [
+        "train",
+        9502,
+        9702
+      ],
+      [
+        "train",
+        28506,
+        28706
+      ],
+      [
+        "calibration",
+        47510,
+        47710
+      ],
+      [
+        "calibration",
+        61763,
+        61963
+      ],
+      [
+        "test",
+        76016,
+        76216
+      ],
+      [
+        "test",
+        90269,
+        90469
+      ]
+    ]
+  },
+  {
+    "file": "2.gafgyt.udp.csv",
+    "sha256": "b03f41406c92f655b517e6839a5dc4036bfd5206a5ee30cb0366cd1f624890a1",
+    "size_bytes": 58988910,
+    "rows": 104791,
+    "nonfinite_rows_full_file": 0,
+    "nonfinite_selected_rows_excluded": 0,
+    "ranges": [
+      [
+        "train",
+        10479,
+        10679
+      ],
+      [
+        "train",
+        31437,
+        31637
+      ],
+      [
+        "calibration",
+        52395,
+        52595
+      ],
+      [
+        "calibration",
+        68114,
+        68314
+      ],
+      [
+        "test",
+        83832,
+        84032
+      ],
+      [
+        "test",
+        99551,
+        99751
+      ]
+    ]
+  },
+  {
+    "file": "2.mirai.ack.csv",
+    "sha256": "1bed3daa5688fcc5ebf3d6b67c51cff43165d45bb97fab76eef0460d3fce5706",
+    "size_bytes": 155635866,
+    "rows": 113285,
+    "nonfinite_rows_full_file": 0,
+    "nonfinite_selected_rows_excluded": 0,
+    "ranges": [
+      [
+        "train",
+        11328,
+        11528
+      ],
+      [
+        "train",
+        33985,
+        34185
+      ],
+      [
+        "calibration",
+        56642,
+        56842
+      ],
+      [
+        "calibration",
+        73635,
+        73835
+      ],
+      [
+        "test",
+        90628,
+        90828
+      ],
+      [
+        "test",
+        107620,
+        107820
+      ]
+    ]
+  },
+  {
+    "file": "2.mirai.scan.csv",
+    "sha256": "504328ca668a7c762f756702f2498f6f6b9c70f68d690454f6198945454da8a0",
+    "size_bytes": 43078827,
+    "rows": 43192,
+    "nonfinite_rows_full_file": 0,
+    "nonfinite_selected_rows_excluded": 0,
+    "ranges": [
+      [
+        "train",
+        4319,
+        4519
+      ],
+      [
+        "train",
+        12957,
+        13157
+      ],
+      [
+        "calibration",
+        21596,
+        21796
+      ],
+      [
+        "calibration",
+        28074,
+        28274
+      ],
+      [
+        "test",
+        34553,
+        34753
+      ],
+      [
+        "test",
+        41032,
+        41232
+      ]
+    ]
+  },
+  {
+    "file": "2.mirai.syn.csv",
+    "sha256": "c7cec6b498eab4a99ff63b4f6ca80fc8a4be433f0a9d282ff9dcb03f1b284cac",
+    "size_bytes": 161570382,
+    "rows": 116807,
+    "nonfinite_rows_full_file": 0,
+    "nonfinite_selected_rows_excluded": 0,
+    "ranges": [
+      [
+        "train",
+        11680,
+        11880
+      ],
+      [
+        "train",
+        35042,
+        35242
+      ],
+      [
+        "calibration",
+        58403,
+        58603
+      ],
+      [
+        "calibration",
+        75924,
+        76124
+      ],
+      [
+        "test",
+        93445,
+        93645
+      ],
+      [
+        "test",
+        110966,
+        111166
+      ]
+    ]
+  },
+  {
+    "file": "2.mirai.udp.csv",
+    "sha256": "db06c4cbdc550727c9f2886767123b3551a41fb85181a264a6193cf49a695e52",
+    "size_bytes": 207783110,
+    "rows": 151481,
+    "nonfinite_rows_full_file": 0,
+    "nonfinite_selected_rows_excluded": 0,
+    "ranges": [
+      [
+        "train",
+        15148,
+        15348
+      ],
+      [
+        "train",
+        45444,
+        45644
+      ],
+      [
+        "calibration",
+        75740,
+        75940
+      ],
+      [
+        "calibration",
+        98462,
+        98662
+      ],
+      [
+        "test",
+        121184,
+        121384
+      ],
+      [
+        "test",
+        143906,
+        144106
+      ]
+    ]
+  },
+  {
+    "file": "2.mirai.udpplain.csv",
+    "sha256": "3654c1188fbc2b4c7b59fcc2d06a39042edce949396b2b098f968aadd1b9f341",
+    "size_bytes": 138671843,
+    "rows": 87368,
+    "nonfinite_rows_full_file": 0,
+    "nonfinite_selected_rows_excluded": 0,
+    "ranges": [
+      [
+        "train",
+        8736,
+        8936
+      ],
+      [
+        "train",
+        26210,
+        26410
+      ],
+      [
+        "calibration",
+        43684,
+        43884
+      ],
+      [
+        "calibration",
+        56789,
+        56989
+      ],
+      [
+        "test",
+        69894,
+        70094
+      ],
+      [
+        "test",
+        82999,
+        83199
+      ]
+    ]
+  },
+  {
+    "file": "3.benign.csv",
+    "sha256": "75cc608d3196950ad1cb14fc050babb96098128106b55ed84226e3ea97dba821",
+    "size_bytes": 37135498,
+    "rows": 39100,
+    "nonfinite_rows_full_file": 0,
+    "nonfinite_selected_rows_excluded": 0,
+    "ranges": [
+      [
+        "train",
+        3910,
+        4910
+      ],
+      [
+        "train",
+        11730,
+        12730
+      ],
+      [
+        "calibration",
+        19550,
+        20550
+      ],
+      [
+        "calibration",
+        25415,
+        26415
+      ],
+      [
+        "test",
+        31280,
+        32280
+      ],
+      [
+        "test",
+        37145,
+        38145
+      ]
+    ]
+  },
+  {
+    "file": "3.gafgyt.combo.csv",
+    "sha256": "8d943d53ba021d56721134b0582c9f3ddd2484c8bd7645230abd5a72df29290e",
+    "size_bytes": 94030426,
+    "rows": 53014,
+    "nonfinite_rows_full_file": 0,
+    "nonfinite_selected_rows_excluded": 0,
+    "ranges": [
+      [
+        "train",
+        5301,
+        5501
+      ],
+      [
+        "train",
+        15904,
+        16104
+      ],
+      [
+        "calibration",
+        26507,
+        26707
+      ],
+      [
+        "calibration",
+        34459,
+        34659
+      ],
+      [
+        "test",
+        42411,
+        42611
+      ],
+      [
+        "test",
+        50363,
+        50563
+      ]
+    ]
+  },
+  {
+    "file": "3.gafgyt.junk.csv",
+    "sha256": "5cc1a8a1615a30de172aaa0443d992a93bb32b30e38798a74968c152a8fffc75",
+    "size_bytes": 50828262,
+    "rows": 29797,
+    "nonfinite_rows_full_file": 0,
+    "nonfinite_selected_rows_excluded": 0,
+    "ranges": [
+      [
+        "train",
+        2979,
+        3179
+      ],
+      [
+        "train",
+        8939,
+        9139
+      ],
+      [
+        "calibration",
+        14898,
+        15098
+      ],
+      [
+        "calibration",
+        19368,
+        19568
+      ],
+      [
+        "test",
+        23837,
+        24037
+      ],
+      [
+        "test",
+        28307,
+        28507
+      ]
+    ]
+  },
+  {
+    "file": "3.gafgyt.scan.csv",
+    "sha256": "52e0f81933a4672251a7c62c6bdb67fe49c156245acd4b4ee15f9f2ec06838ae",
+    "size_bytes": 37971404,
+    "rows": 28120,
+    "nonfinite_rows_full_file": 0,
+    "nonfinite_selected_rows_excluded": 0,
+    "ranges": [
+      [
+        "train",
+        2812,
+        3012
+      ],
+      [
+        "train",
+        8436,
+        8636
+      ],
+      [
+        "calibration",
+        14060,
+        14260
+      ],
+      [
+        "calibration",
+        18278,
+        18478
+      ],
+      [
+        "test",
+        22496,
+        22696
+      ],
+      [
+        "test",
+        26714,
+        26914
+      ]
+    ]
+  },
+  {
+    "file": "3.gafgyt.tcp.csv",
+    "sha256": "aebe5ac63d59408112bc292a5480617c02d815723201c94f7b9dad43dce5cf01",
+    "size_bytes": 57149667,
+    "rows": 101536,
+    "nonfinite_rows_full_file": 0,
+    "nonfinite_selected_rows_excluded": 0,
+    "ranges": [
+      [
+        "train",
+        10153,
+        10353
+      ],
+      [
+        "train",
+        30460,
+        30660
+      ],
+      [
+        "calibration",
+        50768,
+        50968
+      ],
+      [
+        "calibration",
+        65998,
+        66198
+      ],
+      [
+        "test",
+        81228,
+        81428
+      ],
+      [
+        "test",
+        96459,
+        96659
+      ]
+    ]
+  },
+  {
+    "file": "3.gafgyt.udp.csv",
+    "sha256": "cd4777ed44ff01eff437dcb3458bec2b8ddb86db58879c32781bcffa384bcd64",
+    "size_bytes": 58507137,
+    "rows": 103933,
+    "nonfinite_rows_full_file": 0,
+    "nonfinite_selected_rows_excluded": 0,
+    "ranges": [
+      [
+        "train",
+        10393,
+        10593
+      ],
+      [
+        "train",
+        31179,
+        31379
+      ],
+      [
+        "calibration",
+        51966,
+        52166
+      ],
+      [
+        "calibration",
+        67556,
+        67756
+      ],
+      [
+        "test",
+        83146,
+        83346
+      ],
+      [
+        "test",
+        98736,
+        98936
+      ]
+    ]
+  },
+  {
+    "file": "4.benign.csv",
+    "sha256": "10a3508cbbbcd6b3e7647e570f0ab9c72f01f05c32660d2f25f537f9d4efe151",
+    "size_bytes": 214374672,
+    "rows": 175240,
+    "nonfinite_rows_full_file": 0,
+    "nonfinite_selected_rows_excluded": 0,
+    "ranges": [
+      [
+        "train",
+        17524,
+        18524
+      ],
+      [
+        "train",
+        52572,
+        53572
+      ],
+      [
+        "calibration",
+        87620,
+        88620
+      ],
+      [
+        "calibration",
+        113906,
+        114906
+      ],
+      [
+        "test",
+        140192,
+        141192
+      ],
+      [
+        "test",
+        166478,
+        167478
+      ]
+    ]
+  },
+  {
+    "file": "4.gafgyt.combo.csv",
+    "sha256": "923377bf736a67973fc4cd6b36455a44d07932b1b3a825d7ac5063069c8227b5",
+    "size_bytes": 103451636,
+    "rows": 58152,
+    "nonfinite_rows_full_file": 0,
+    "nonfinite_selected_rows_excluded": 0,
+    "ranges": [
+      [
+        "train",
+        5815,
+        6015
+      ],
+      [
+        "train",
+        17445,
+        17645
+      ],
+      [
+        "calibration",
+        29076,
+        29276
+      ],
+      [
+        "calibration",
+        37798,
+        37998
+      ],
+      [
+        "test",
+        46521,
+        46721
+      ],
+      [
+        "test",
+        55244,
+        55444
+      ]
+    ]
+  },
+  {
+    "file": "4.gafgyt.junk.csv",
+    "sha256": "3347890c08b2610e8dca0bb58d9406e9727520eb5308af35f1f84e392da7f746",
+    "size_bytes": 48260845,
+    "rows": 28349,
+    "nonfinite_rows_full_file": 0,
+    "nonfinite_selected_rows_excluded": 0,
+    "ranges": [
+      [
+        "train",
+        2834,
+        3034
+      ],
+      [
+        "train",
+        8504,
+        8704
+      ],
+      [
+        "calibration",
+        14174,
+        14374
+      ],
+      [
+        "calibration",
+        18426,
+        18626
+      ],
+      [
+        "test",
+        22679,
+        22879
+      ],
+      [
+        "test",
+        26931,
+        27131
+      ]
+    ]
+  },
+  {
+    "file": "4.gafgyt.scan.csv",
+    "sha256": "8eb3c88639feb9882126097cc743959e20ba59f25a3cdec079159364884bd792",
+    "size_bytes": 37535324,
+    "rows": 27859,
+    "nonfinite_rows_full_file": 0,
+    "nonfinite_selected_rows_excluded": 0,
+    "ranges": [
+      [
+        "train",
+        2785,
+        2985
+      ],
+      [
+        "train",
+        8357,
+        8557
+      ],
+      [
+        "calibration",
+        13929,
+        14129
+      ],
+      [
+        "calibration",
+        18108,
+        18308
+      ],
+      [
+        "test",
+        22287,
+        22487
+      ],
+      [
+        "test",
+        26466,
+        26666
+      ]
+    ]
+  },
+  {
+    "file": "4.gafgyt.tcp.csv",
+    "sha256": "2eca9dc174682ba154b8c311b705b4acf2b0af82ff9c05f51b735416f3e7a315",
+    "size_bytes": 52113658,
+    "rows": 92581,
+    "nonfinite_rows_full_file": 0,
+    "nonfinite_selected_rows_excluded": 0,
+    "ranges": [
+      [
+        "train",
+        9258,
+        9458
+      ],
+      [
+        "train",
+        27774,
+        27974
+      ],
+      [
+        "calibration",
+        46290,
+        46490
+      ],
+      [
+        "calibration",
+        60177,
+        60377
+      ],
+      [
+        "test",
+        74064,
+        74264
+      ],
+      [
+        "test",
+        87951,
+        88151
+      ]
+    ]
+  },
+  {
+    "file": "4.gafgyt.udp.csv",
+    "sha256": "76cceeac5043ca45939381a8d5c97dbcb8bac00d3293408a7cdf5b1cd908b7aa",
+    "size_bytes": 59545509,
+    "rows": 105782,
+    "nonfinite_rows_full_file": 0,
+    "nonfinite_selected_rows_excluded": 0,
+    "ranges": [
+      [
+        "train",
+        10578,
+        10778
+      ],
+      [
+        "train",
+        31734,
+        31934
+      ],
+      [
+        "calibration",
+        52891,
+        53091
+      ],
+      [
+        "calibration",
+        68758,
+        68958
+      ],
+      [
+        "test",
+        84625,
+        84825
+      ],
+      [
+        "test",
+        100492,
+        100692
+      ]
+    ]
+  },
+  {
+    "file": "4.mirai.ack.csv",
+    "sha256": "f78ec751df687bcba48ed79b30b4d945eeeb1d40de6fdf10bd05cbd0a29a4ee9",
+    "size_bytes": 120882839,
+    "rows": 91123,
+    "nonfinite_rows_full_file": 0,
+    "nonfinite_selected_rows_excluded": 0,
+    "ranges": [
+      [
+        "train",
+        9112,
+        9312
+      ],
+      [
+        "train",
+        27336,
+        27536
+      ],
+      [
+        "calibration",
+        45561,
+        45761
+      ],
+      [
+        "calibration",
+        59229,
+        59429
+      ],
+      [
+        "test",
+        72898,
+        73098
+      ],
+      [
+        "test",
+        86566,
+        86766
+      ]
+    ]
+  },
+  {
+    "file": "4.mirai.scan.csv",
+    "sha256": "4ed36577a5e0db1d31b8621dbf3227ae59ce8e674a8d852386e74abbef442513",
+    "size_bytes": 103452295,
+    "rows": 103621,
+    "nonfinite_rows_full_file": 0,
+    "nonfinite_selected_rows_excluded": 0,
+    "ranges": [
+      [
+        "train",
+        10362,
+        10562
+      ],
+      [
+        "train",
+        31086,
+        31286
+      ],
+      [
+        "calibration",
+        51810,
+        52010
+      ],
+      [
+        "calibration",
+        67353,
+        67553
+      ],
+      [
+        "test",
+        82896,
+        83096
+      ],
+      [
+        "test",
+        98439,
+        98639
+      ]
+    ]
+  },
+  {
+    "file": "4.mirai.syn.csv",
+    "sha256": "e715fb18f8d6279dab93760ab30587a595b2f99344fb55d754f250cf48715112",
+    "size_bytes": 158976651,
+    "rows": 118128,
+    "nonfinite_rows_full_file": 0,
+    "nonfinite_selected_rows_excluded": 0,
+    "ranges": [
+      [
+        "train",
+        11812,
+        12012
+      ],
+      [
+        "train",
+        35438,
+        35638
+      ],
+      [
+        "calibration",
+        59064,
+        59264
+      ],
+      [
+        "calibration",
+        76783,
+        76983
+      ],
+      [
+        "test",
+        94502,
+        94702
+      ],
+      [
+        "test",
+        112221,
+        112421
+      ]
+    ]
+  },
+  {
+    "file": "4.mirai.udp.csv",
+    "sha256": "cc1558f17896514d52ac9f23856a9beac0cec8369a2d93d58be99360599455f0",
+    "size_bytes": 287994126,
+    "rows": 217034,
+    "nonfinite_rows_full_file": 0,
+    "nonfinite_selected_rows_excluded": 0,
+    "ranges": [
+      [
+        "train",
+        21703,
+        21903
+      ],
+      [
+        "train",
+        65110,
+        65310
+      ],
+      [
+        "calibration",
+        108517,
+        108717
+      ],
+      [
+        "calibration",
+        141072,
+        141272
+      ],
+      [
+        "test",
+        173627,
+        173827
+      ],
+      [
+        "test",
+        206182,
+        206382
+      ]
+    ]
+  },
+  {
+    "file": "4.mirai.udpplain.csv",
+    "sha256": "8562521c9e85353dd32bb1fa616ce4d908a0f4231006c1955cf5a9df0ec195a6",
+    "size_bytes": 118674570,
+    "rows": 80808,
+    "nonfinite_rows_full_file": 0,
+    "nonfinite_selected_rows_excluded": 0,
+    "ranges": [
+      [
+        "train",
+        8080,
+        8280
+      ],
+      [
+        "train",
+        24242,
+        24442
+      ],
+      [
+        "calibration",
+        40404,
+        40604
+      ],
+      [
+        "calibration",
+        52525,
+        52725
+      ],
+      [
+        "test",
+        64646,
+        64846
+      ],
+      [
+        "test",
+        76767,
+        76967
+      ]
+    ]
+  },
+  {
+    "file": "5.benign.csv",
+    "sha256": "521cd6f18ecb53dee6c750b6139a035179109988f75aeb81fa26f549a8084ae8",
+    "size_bytes": 64576152,
+    "rows": 62154,
+    "nonfinite_rows_full_file": 0,
+    "nonfinite_selected_rows_excluded": 0,
+    "ranges": [
+      [
+        "train",
+        6215,
+        7215
+      ],
+      [
+        "train",
+        18646,
+        19646
+      ],
+      [
+        "calibration",
+        31077,
+        32077
+      ],
+      [
+        "calibration",
+        40400,
+        41400
+      ],
+      [
+        "test",
+        49723,
+        50723
+      ],
+      [
+        "test",
+        59046,
+        60046
+      ]
+    ]
+  },
+  {
+    "file": "5.gafgyt.combo.csv",
+    "sha256": "836bd15576c15b64fcfca36720ec3e3929328d6d362cc3cd829336b65aec92e7",
+    "size_bytes": 109076363,
+    "rows": 61380,
+    "nonfinite_rows_full_file": 0,
+    "nonfinite_selected_rows_excluded": 0,
+    "ranges": [
+      [
+        "train",
+        6138,
+        6338
+      ],
+      [
+        "train",
+        18414,
+        18614
+      ],
+      [
+        "calibration",
+        30690,
+        30890
+      ],
+      [
+        "calibration",
+        39897,
+        40097
+      ],
+      [
+        "test",
+        49104,
+        49304
+      ],
+      [
+        "test",
+        58311,
+        58511
+      ]
+    ]
+  },
+  {
+    "file": "5.gafgyt.junk.csv",
+    "sha256": "043ce520adc36255d4f36bde7b243fdf07f2171443c4b11d44ec9894f7ed9dcb",
+    "size_bytes": 52629481,
+    "rows": 30898,
+    "nonfinite_rows_full_file": 0,
+    "nonfinite_selected_rows_excluded": 0,
+    "ranges": [
+      [
+        "train",
+        3089,
+        3289
+      ],
+      [
+        "train",
+        9269,
+        9469
+      ],
+      [
+        "calibration",
+        15449,
+        15649
+      ],
+      [
+        "calibration",
+        20083,
+        20283
+      ],
+      [
+        "test",
+        24718,
+        24918
+      ],
+      [
+        "test",
+        29353,
+        29553
+      ]
+    ]
+  },
+  {
+    "file": "5.gafgyt.scan.csv",
+    "sha256": "7946a18b9336cc719e1658e568b470f46f243a2ec4fafcb2477f23afc76e57a1",
+    "size_bytes": 39580175,
+    "rows": 29297,
+    "nonfinite_rows_full_file": 0,
+    "nonfinite_selected_rows_excluded": 0,
+    "ranges": [
+      [
+        "train",
+        2929,
+        3129
+      ],
+      [
+        "train",
+        8789,
+        8989
+      ],
+      [
+        "calibration",
+        14648,
+        14848
+      ],
+      [
+        "calibration",
+        19043,
+        19243
+      ],
+      [
+        "test",
+        23437,
+        23637
+      ],
+      [
+        "test",
+        27832,
+        28032
+      ]
+    ]
+  },
+  {
+    "file": "5.gafgyt.tcp.csv",
+    "sha256": "bb9233efb3497494fcb71f19199d49ce18b7013f2aa371b92b8d86d91388298a",
+    "size_bytes": 58822798,
+    "rows": 104510,
+    "nonfinite_rows_full_file": 0,
+    "nonfinite_selected_rows_excluded": 0,
+    "ranges": [
+      [
+        "train",
+        10451,
+        10651
+      ],
+      [
+        "train",
+        31353,
+        31553
+      ],
+      [
+        "calibration",
+        52255,
+        52455
+      ],
+      [
+        "calibration",
+        67931,
+        68131
+      ],
+      [
+        "test",
+        83608,
+        83808
+      ],
+      [
+        "test",
+        99284,
+        99484
+      ]
+    ]
+  },
+  {
+    "file": "5.gafgyt.udp.csv",
+    "sha256": "bd9107b757128091288af71a69453136710907cc29f27313801274a0fc79eeaa",
+    "size_bytes": 58550975,
+    "rows": 104011,
+    "nonfinite_rows_full_file": 0,
+    "nonfinite_selected_rows_excluded": 0,
+    "ranges": [
+      [
+        "train",
+        10401,
+        10601
+      ],
+      [
+        "train",
+        31203,
+        31403
+      ],
+      [
+        "calibration",
+        52005,
+        52205
+      ],
+      [
+        "calibration",
+        67607,
+        67807
+      ],
+      [
+        "test",
+        83208,
+        83408
+      ],
+      [
+        "test",
+        98810,
+        99010
+      ]
+    ]
+  },
+  {
+    "file": "5.mirai.ack.csv",
+    "sha256": "3e38fe04f99c69cf7fd24b4ccb0cfa7c411b56cabfbb0d505fe13ce0506c9374",
+    "size_bytes": 76849640,
+    "rows": 60554,
+    "nonfinite_rows_full_file": 0,
+    "nonfinite_selected_rows_excluded": 0,
+    "ranges": [
+      [
+        "train",
+        6055,
+        6255
+      ],
+      [
+        "train",
+        18166,
+        18366
+      ],
+      [
+        "calibration",
+        30277,
+        30477
+      ],
+      [
+        "calibration",
+        39360,
+        39560
+      ],
+      [
+        "test",
+        48443,
+        48643
+      ],
+      [
+        "test",
+        57526,
+        57726
+      ]
+    ]
+  },
+  {
+    "file": "5.mirai.scan.csv",
+    "sha256": "2dcfcad287eff7ce72cc61a2c45e7f0d6888cbfd3eb8d177f59f15360f3e30c5",
+    "size_bytes": 96028732,
+    "rows": 96781,
+    "nonfinite_rows_full_file": 0,
+    "nonfinite_selected_rows_excluded": 0,
+    "ranges": [
+      [
+        "train",
+        9678,
+        9878
+      ],
+      [
+        "train",
+        29034,
+        29234
+      ],
+      [
+        "calibration",
+        48390,
+        48590
+      ],
+      [
+        "calibration",
+        62907,
+        63107
+      ],
+      [
+        "test",
+        77424,
+        77624
+      ],
+      [
+        "test",
+        91941,
+        92141
+      ]
+    ]
+  },
+  {
+    "file": "5.mirai.syn.csv",
+    "sha256": "d49b750bfa9c0178da5c517d180509bdc6a890485c11dbba8029e424ac1869cd",
+    "size_bytes": 83285871,
+    "rows": 65746,
+    "nonfinite_rows_full_file": 0,
+    "nonfinite_selected_rows_excluded": 0,
+    "ranges": [
+      [
+        "train",
+        6574,
+        6774
+      ],
+      [
+        "train",
+        19723,
+        19923
+      ],
+      [
+        "calibration",
+        32873,
+        33073
+      ],
+      [
+        "calibration",
+        42734,
+        42934
+      ],
+      [
+        "test",
+        52596,
+        52796
+      ],
+      [
+        "test",
+        62458,
+        62658
+      ]
+    ]
+  },
+  {
+    "file": "5.mirai.udp.csv",
+    "sha256": "568fc142fd90176ccde0953bc5c272499cf01bf0c268425c18a56591dedac978",
+    "size_bytes": 200357797,
+    "rows": 156248,
+    "nonfinite_rows_full_file": 0,
+    "nonfinite_selected_rows_excluded": 0,
+    "ranges": [
+      [
+        "train",
+        15624,
+        15824
+      ],
+      [
+        "train",
+        46874,
+        47074
+      ],
+      [
+        "calibration",
+        78124,
+        78324
+      ],
+      [
+        "calibration",
+        101561,
+        101761
+      ],
+      [
+        "test",
+        124998,
+        125198
+      ],
+      [
+        "test",
+        148435,
+        148635
+      ]
+    ]
+  },
+  {
+    "file": "5.mirai.udpplain.csv",
+    "sha256": "32ed5a5e34515d33a42f51132c1e5c03edf08b956f447ce68a7ddc92b5960597",
+    "size_bytes": 79817584,
+    "rows": 56681,
+    "nonfinite_rows_full_file": 0,
+    "nonfinite_selected_rows_excluded": 0,
+    "ranges": [
+      [
+        "train",
+        5668,
+        5868
+      ],
+      [
+        "train",
+        17004,
+        17204
+      ],
+      [
+        "calibration",
+        28340,
+        28540
+      ],
+      [
+        "calibration",
+        36842,
+        37042
+      ],
+      [
+        "test",
+        45344,
+        45544
+      ],
+      [
+        "test",
+        53846,
+        54046
+      ]
+    ]
+  },
+  {
+    "file": "6.benign.csv",
+    "sha256": "f897d6e347bd2cee9518c8aa6cdf873a793d505b341169383b52c7b1402affd3",
+    "size_bytes": 103620766,
+    "rows": 98514,
+    "nonfinite_rows_full_file": 0,
+    "nonfinite_selected_rows_excluded": 0,
+    "ranges": [
+      [
+        "train",
+        9851,
+        10851
+      ],
+      [
+        "train",
+        29554,
+        30554
+      ],
+      [
+        "calibration",
+        49257,
+        50257
+      ],
+      [
+        "calibration",
+        64034,
+        65034
+      ],
+      [
+        "test",
+        78811,
+        79811
+      ],
+      [
+        "test",
+        93588,
+        94588
+      ]
+    ]
+  },
+  {
+    "file": "6.gafgyt.combo.csv",
+    "sha256": "55f4a7c419113e0acd426ae7e5242725b5031e481af2eed9c815bb3be406a666",
+    "size_bytes": 102197160,
+    "rows": 57530,
+    "nonfinite_rows_full_file": 0,
+    "nonfinite_selected_rows_excluded": 0,
+    "ranges": [
+      [
+        "train",
+        5753,
+        5953
+      ],
+      [
+        "train",
+        17259,
+        17459
+      ],
+      [
+        "calibration",
+        28765,
+        28965
+      ],
+      [
+        "calibration",
+        37394,
+        37594
+      ],
+      [
+        "test",
+        46024,
+        46224
+      ],
+      [
+        "test",
+        54653,
+        54853
+      ]
+    ]
+  },
+  {
+    "file": "6.gafgyt.junk.csv",
+    "sha256": "c0b932340fb605b9e50f3d9acd1662995e81c2af127a141e911ee6509d495cad",
+    "size_bytes": 49536332,
+    "rows": 29068,
+    "nonfinite_rows_full_file": 0,
+    "nonfinite_selected_rows_excluded": 0,
+    "ranges": [
+      [
+        "train",
+        2906,
+        3106
+      ],
+      [
+        "train",
+        8720,
+        8920
+      ],
+      [
+        "calibration",
+        14534,
+        14734
+      ],
+      [
+        "calibration",
+        18894,
+        19094
+      ],
+      [
+        "test",
+        23254,
+        23454
+      ],
+      [
+        "test",
+        27614,
+        27814
+      ]
+    ]
+  },
+  {
+    "file": "6.gafgyt.scan.csv",
+    "sha256": "386b1753a817e3fd2241d005a3231703e5494d76e901b5f62f969c6a18ec24d2",
+    "size_bytes": 38452514,
+    "rows": 28397,
+    "nonfinite_rows_full_file": 0,
+    "nonfinite_selected_rows_excluded": 0,
+    "ranges": [
+      [
+        "train",
+        2839,
+        3039
+      ],
+      [
+        "train",
+        8519,
+        8719
+      ],
+      [
+        "calibration",
+        14198,
+        14398
+      ],
+      [
+        "calibration",
+        18458,
+        18658
+      ],
+      [
+        "test",
+        22717,
+        22917
+      ],
+      [
+        "test",
+        26977,
+        27177
+      ]
+    ]
+  },
+  {
+    "file": "6.gafgyt.tcp.csv",
+    "sha256": "311c7d6d76284e3f7767656e9fe44291a6112dc64524c2c0b79475bfa73c1295",
+    "size_bytes": 50316596,
+    "rows": 89387,
+    "nonfinite_rows_full_file": 0,
+    "nonfinite_selected_rows_excluded": 0,
+    "ranges": [
+      [
+        "train",
+        8938,
+        9138
+      ],
+      [
+        "train",
+        26816,
+        27016
+      ],
+      [
+        "calibration",
+        44693,
+        44893
+      ],
+      [
+        "calibration",
+        58101,
+        58301
+      ],
+      [
+        "test",
+        71509,
+        71709
+      ],
+      [
+        "test",
+        84917,
+        85117
+      ]
+    ]
+  },
+  {
+    "file": "6.gafgyt.udp.csv",
+    "sha256": "04b0cba05d2971df748ec742cbdd7dd1969172910cb86aece78fa1dd4f19cfe7",
+    "size_bytes": 58912912,
+    "rows": 104658,
+    "nonfinite_rows_full_file": 0,
+    "nonfinite_selected_rows_excluded": 0,
+    "ranges": [
+      [
+        "train",
+        10465,
+        10665
+      ],
+      [
+        "train",
+        31397,
+        31597
+      ],
+      [
+        "calibration",
+        52329,
+        52529
+      ],
+      [
+        "calibration",
+        68027,
+        68227
+      ],
+      [
+        "test",
+        83726,
+        83926
+      ],
+      [
+        "test",
+        99425,
+        99625
+      ]
+    ]
+  },
+  {
+    "file": "6.mirai.ack.csv",
+    "sha256": "3c514a706e57eae295d23d2cff00f895af9f2148f2f7214578f55b24078c56f9",
+    "size_bytes": 73553957,
+    "rows": 57997,
+    "nonfinite_rows_full_file": 0,
+    "nonfinite_selected_rows_excluded": 0,
+    "ranges": [
+      [
+        "train",
+        5799,
+        5999
+      ],
+      [
+        "train",
+        17399,
+        17599
+      ],
+      [
+        "calibration",
+        28998,
+        29198
+      ],
+      [
+        "calibration",
+        37698,
+        37898
+      ],
+      [
+        "test",
+        46397,
+        46597
+      ],
+      [
+        "test",
+        55097,
+        55297
+      ]
+    ]
+  },
+  {
+    "file": "6.mirai.scan.csv",
+    "sha256": "316919fe2550ffd8fbd1cf9312478f830a34437dae29dd2097cddf5466ab94fb",
+    "size_bytes": 96333715,
+    "rows": 97096,
+    "nonfinite_rows_full_file": 0,
+    "nonfinite_selected_rows_excluded": 0,
+    "ranges": [
+      [
+        "train",
+        9709,
+        9909
+      ],
+      [
+        "train",
+        29128,
+        29328
+      ],
+      [
+        "calibration",
+        48548,
+        48748
+      ],
+      [
+        "calibration",
+        63112,
+        63312
+      ],
+      [
+        "test",
+        77676,
+        77876
+      ],
+      [
+        "test",
+        92241,
+        92441
+      ]
+    ]
+  },
+  {
+    "file": "6.mirai.syn.csv",
+    "sha256": "5c0f18df7d4e50eb72c46bc0ad86d9d0b17cff3daa9c0458003e2f40f1a866c6",
+    "size_bytes": 78548822,
+    "rows": 61851,
+    "nonfinite_rows_full_file": 0,
+    "nonfinite_selected_rows_excluded": 0,
+    "ranges": [
+      [
+        "train",
+        6185,
+        6385
+      ],
+      [
+        "train",
+        18555,
+        18755
+      ],
+      [
+        "calibration",
+        30925,
+        31125
+      ],
+      [
+        "calibration",
+        40203,
+        40403
+      ],
+      [
+        "test",
+        49480,
+        49680
+      ],
+      [
+        "test",
+        58758,
+        58958
+      ]
+    ]
+  },
+  {
+    "file": "6.mirai.udp.csv",
+    "sha256": "c5fe69868536d87b5422e0c04d6f300f026adbb16c6a6797f3dae649a708883d",
+    "size_bytes": 203388721,
+    "rows": 158608,
+    "nonfinite_rows_full_file": 0,
+    "nonfinite_selected_rows_excluded": 0,
+    "ranges": [
+      [
+        "train",
+        15860,
+        16060
+      ],
+      [
+        "train",
+        47582,
+        47782
+      ],
+      [
+        "calibration",
+        79304,
+        79504
+      ],
+      [
+        "calibration",
+        103095,
+        103295
+      ],
+      [
+        "test",
+        126886,
+        127086
+      ],
+      [
+        "test",
+        150677,
+        150877
+      ]
+    ]
+  },
+  {
+    "file": "6.mirai.udpplain.csv",
+    "sha256": "6bfdf6d88ceeb1a397ab51afad0a372c0c2ac1e7937870946aa1e94e80328562",
+    "size_bytes": 75727146,
+    "rows": 53785,
+    "nonfinite_rows_full_file": 0,
+    "nonfinite_selected_rows_excluded": 0,
+    "ranges": [
+      [
+        "train",
+        5378,
+        5578
+      ],
+      [
+        "train",
+        16135,
+        16335
+      ],
+      [
+        "calibration",
+        26892,
+        27092
+      ],
+      [
+        "calibration",
+        34960,
+        35160
+      ],
+      [
+        "test",
+        43028,
+        43228
+      ],
+      [
+        "test",
+        51095,
+        51295
+      ]
+    ]
+  },
+  {
+    "file": "7.benign.csv",
+    "sha256": "b2f63cf6a42061de8d44f6d23be92a7e27c8ebb71edda80424b1897de304372f",
+    "size_bytes": 54969458,
+    "rows": 52150,
+    "nonfinite_rows_full_file": 0,
+    "nonfinite_selected_rows_excluded": 0,
+    "ranges": [
+      [
+        "train",
+        5215,
+        6215
+      ],
+      [
+        "train",
+        15645,
+        16645
+      ],
+      [
+        "calibration",
+        26075,
+        27075
+      ],
+      [
+        "calibration",
+        33897,
+        34897
+      ],
+      [
+        "test",
+        41720,
+        42720
+      ],
+      [
+        "test",
+        49542,
+        50542
+      ]
+    ]
+  },
+  {
+    "file": "7.gafgyt.combo.csv",
+    "sha256": "6571ae13c9eede42ca9f74f552c4599ce8003f37b18018dbd32cbce53a758748",
+    "size_bytes": 104015943,
+    "rows": 58669,
+    "nonfinite_rows_full_file": 0,
+    "nonfinite_selected_rows_excluded": 0,
+    "ranges": [
+      [
+        "train",
+        5866,
+        6066
+      ],
+      [
+        "train",
+        17600,
+        17800
+      ],
+      [
+        "calibration",
+        29334,
+        29534
+      ],
+      [
+        "calibration",
+        38134,
+        38334
+      ],
+      [
+        "test",
+        46935,
+        47135
+      ],
+      [
+        "test",
+        55735,
+        55935
+      ]
+    ]
+  },
+  {
+    "file": "7.gafgyt.junk.csv",
+    "sha256": "afd30eb66d4a82735a93b3a195412ffcf347710eb6463002984d8d75e4027d3d",
+    "size_bytes": 48261599,
+    "rows": 28305,
+    "nonfinite_rows_full_file": 0,
+    "nonfinite_selected_rows_excluded": 0,
+    "ranges": [
+      [
+        "train",
+        2830,
+        3030
+      ],
+      [
+        "train",
+        8491,
+        8691
+      ],
+      [
+        "calibration",
+        14152,
+        14352
+      ],
+      [
+        "calibration",
+        18398,
+        18598
+      ],
+      [
+        "test",
+        22644,
+        22844
+      ],
+      [
+        "test",
+        26889,
+        27089
+      ]
+    ]
+  },
+  {
+    "file": "7.gafgyt.scan.csv",
+    "sha256": "7660dca4cbc510a92ae7698b0321bbdd8e7b97eb0f70596291c9ba2f6c302921",
+    "size_bytes": 37441442,
+    "rows": 27698,
+    "nonfinite_rows_full_file": 0,
+    "nonfinite_selected_rows_excluded": 0,
+    "ranges": [
+      [
+        "train",
+        2769,
+        2969
+      ],
+      [
+        "train",
+        8309,
+        8509
+      ],
+      [
+        "calibration",
+        13849,
+        14049
+      ],
+      [
+        "calibration",
+        18003,
+        18203
+      ],
+      [
+        "test",
+        22158,
+        22358
+      ],
+      [
+        "test",
+        26313,
+        26513
+      ]
+    ]
+  },
+  {
+    "file": "7.gafgyt.tcp.csv",
+    "sha256": "030c8ecec1525308aa533784d8035168b9a136e08e11fbcc104236ee5b2c0c7e",
+    "size_bytes": 55038941,
+    "rows": 97783,
+    "nonfinite_rows_full_file": 0,
+    "nonfinite_selected_rows_excluded": 0,
+    "ranges": [
+      [
+        "train",
+        9778,
+        9978
+      ],
+      [
+        "train",
+        29334,
+        29534
+      ],
+      [
+        "calibration",
+        48891,
+        49091
+      ],
+      [
+        "calibration",
+        63558,
+        63758
+      ],
+      [
+        "test",
+        78226,
+        78426
+      ],
+      [
+        "test",
+        92893,
+        93093
+      ]
+    ]
+  },
+  {
+    "file": "7.gafgyt.udp.csv",
+    "sha256": "921beb8b9bf270614089eee524d21745787552010e7671330636955923f39aa4",
+    "size_bytes": 62265519,
+    "rows": 110617,
+    "nonfinite_rows_full_file": 0,
+    "nonfinite_selected_rows_excluded": 0,
+    "ranges": [
+      [
+        "train",
+        11061,
+        11261
+      ],
+      [
+        "train",
+        33185,
+        33385
+      ],
+      [
+        "calibration",
+        55308,
+        55508
+      ],
+      [
+        "calibration",
+        71901,
+        72101
+      ],
+      [
+        "test",
+        88493,
+        88693
+      ],
+      [
+        "test",
+        105086,
+        105286
+      ]
+    ]
+  },
+  {
+    "file": "8.benign.csv",
+    "sha256": "6ec7c1a83e1aa0ec510e63721e3e52d5f307b939c3807cd6accd284e8f6f6c43",
+    "size_bytes": 47616941,
+    "rows": 46585,
+    "nonfinite_rows_full_file": 0,
+    "nonfinite_selected_rows_excluded": 0,
+    "ranges": [
+      [
+        "train",
+        4658,
+        5658
+      ],
+      [
+        "train",
+        13975,
+        14975
+      ],
+      [
+        "calibration",
+        23292,
+        24292
+      ],
+      [
+        "calibration",
+        30280,
+        31280
+      ],
+      [
+        "test",
+        37268,
+        38268
+      ],
+      [
+        "test",
+        44255,
+        45255
+      ]
+    ]
+  },
+  {
+    "file": "8.gafgyt.combo.csv",
+    "sha256": "36114961849a84f39f5e0935f97ea67e8e69ccb1da3e01d13cc4cc6ca583215f",
+    "size_bytes": 96595924,
+    "rows": 54283,
+    "nonfinite_rows_full_file": 0,
+    "nonfinite_selected_rows_excluded": 0,
+    "ranges": [
+      [
+        "train",
+        5428,
+        5628
+      ],
+      [
+        "train",
+        16284,
+        16484
+      ],
+      [
+        "calibration",
+        27141,
+        27341
+      ],
+      [
+        "calibration",
+        35283,
+        35483
+      ],
+      [
+        "test",
+        43426,
+        43626
+      ],
+      [
+        "test",
+        51568,
+        51768
+      ]
+    ]
+  },
+  {
+    "file": "8.gafgyt.junk.csv",
+    "sha256": "4b55b24c90399fb51d0578bdc21de6183502b3903f5a215e158e2d1288e6d74b",
+    "size_bytes": 48585877,
+    "rows": 28579,
+    "nonfinite_rows_full_file": 0,
+    "nonfinite_selected_rows_excluded": 0,
+    "ranges": [
+      [
+        "train",
+        2857,
+        3057
+      ],
+      [
+        "train",
+        8573,
+        8773
+      ],
+      [
+        "calibration",
+        14289,
+        14489
+      ],
+      [
+        "calibration",
+        18576,
+        18776
+      ],
+      [
+        "test",
+        22863,
+        23063
+      ],
+      [
+        "test",
+        27150,
+        27350
+      ]
+    ]
+  },
+  {
+    "file": "8.gafgyt.scan.csv",
+    "sha256": "204fadeb472d67e47ecdcad0ad7faf317ef0037ed431cfcd19664704fe575068",
+    "size_bytes": 37511054,
+    "rows": 27825,
+    "nonfinite_rows_full_file": 0,
+    "nonfinite_selected_rows_excluded": 0,
+    "ranges": [
+      [
+        "train",
+        2782,
+        2982
+      ],
+      [
+        "train",
+        8347,
+        8547
+      ],
+      [
+        "calibration",
+        13912,
+        14112
+      ],
+      [
+        "calibration",
+        18086,
+        18286
+      ],
+      [
+        "test",
+        22260,
+        22460
+      ],
+      [
+        "test",
+        26433,
+        26633
+      ]
+    ]
+  },
+  {
+    "file": "8.gafgyt.tcp.csv",
+    "sha256": "8d22555dd7db69573f62f71628b38670df3fb144219d51d97119a82b10235d96",
+    "size_bytes": 49995960,
+    "rows": 88816,
+    "nonfinite_rows_full_file": 0,
+    "nonfinite_selected_rows_excluded": 0,
+    "ranges": [
+      [
+        "train",
+        8881,
+        9081
+      ],
+      [
+        "train",
+        26644,
+        26844
+      ],
+      [
+        "calibration",
+        44408,
+        44608
+      ],
+      [
+        "calibration",
+        57730,
+        57930
+      ],
+      [
+        "test",
+        71052,
+        71252
+      ],
+      [
+        "test",
+        84375,
+        84575
+      ]
+    ]
+  },
+  {
+    "file": "8.gafgyt.udp.csv",
+    "sha256": "83c3ea1de563b44d28c19309928039426b71c26a438c8e571b1281a5c32decfe",
+    "size_bytes": 58385654,
+    "rows": 103720,
+    "nonfinite_rows_full_file": 0,
+    "nonfinite_selected_rows_excluded": 0,
+    "ranges": [
+      [
+        "train",
+        10372,
+        10572
+      ],
+      [
+        "train",
+        31116,
+        31316
+      ],
+      [
+        "calibration",
+        51860,
+        52060
+      ],
+      [
+        "calibration",
+        67418,
+        67618
+      ],
+      [
+        "test",
+        82976,
+        83176
+      ],
+      [
+        "test",
+        98534,
+        98734
+      ]
+    ]
+  },
+  {
+    "file": "8.mirai.ack.csv",
+    "sha256": "30d66df604c4b46b417547d64e9f7e6fb9a1fa04cc4936aa4c2cf56ac9c78273",
+    "size_bytes": 153189923,
+    "rows": 111480,
+    "nonfinite_rows_full_file": 0,
+    "nonfinite_selected_rows_excluded": 0,
+    "ranges": [
+      [
+        "train",
+        11148,
+        11348
+      ],
+      [
+        "train",
+        33444,
+        33644
+      ],
+      [
+        "calibration",
+        55740,
+        55940
+      ],
+      [
+        "calibration",
+        72462,
+        72662
+      ],
+      [
+        "test",
+        89184,
+        89384
+      ],
+      [
+        "test",
+        105906,
+        106106
+      ]
+    ]
+  },
+  {
+    "file": "8.mirai.scan.csv",
+    "sha256": "17c6f5c00cadae95a55fca1a9e2829f3830b1cd8a14970c817a778f4e312a6a8",
+    "size_bytes": 45823393,
+    "rows": 45930,
+    "nonfinite_rows_full_file": 0,
+    "nonfinite_selected_rows_excluded": 0,
+    "ranges": [
+      [
+        "train",
+        4593,
+        4793
+      ],
+      [
+        "train",
+        13779,
+        13979
+      ],
+      [
+        "calibration",
+        22965,
+        23165
+      ],
+      [
+        "calibration",
+        29854,
+        30054
+      ],
+      [
+        "test",
+        36744,
+        36944
+      ],
+      [
+        "test",
+        43633,
+        43833
+      ]
+    ]
+  },
+  {
+    "file": "8.mirai.syn.csv",
+    "sha256": "d233b084dc3d9e508b4302a62094859985300a8dd2f99c41a53414e3ea757171",
+    "size_bytes": 173607186,
+    "rows": 125715,
+    "nonfinite_rows_full_file": 0,
+    "nonfinite_selected_rows_excluded": 0,
+    "ranges": [
+      [
+        "train",
+        12571,
+        12771
+      ],
+      [
+        "train",
+        37714,
+        37914
+      ],
+      [
+        "calibration",
+        62857,
+        63057
+      ],
+      [
+        "calibration",
+        81714,
+        81914
+      ],
+      [
+        "test",
+        100572,
+        100772
+      ],
+      [
+        "test",
+        119429,
+        119629
+      ]
+    ]
+  },
+  {
+    "file": "8.mirai.udp.csv",
+    "sha256": "d79e3ceb3a93bdf758852d2e497128cbe342f3474090b5abfe508dcebdbacbd5",
+    "size_bytes": 208331925,
+    "rows": 151879,
+    "nonfinite_rows_full_file": 0,
+    "nonfinite_selected_rows_excluded": 0,
+    "ranges": [
+      [
+        "train",
+        15187,
+        15387
+      ],
+      [
+        "train",
+        45563,
+        45763
+      ],
+      [
+        "calibration",
+        75939,
+        76139
+      ],
+      [
+        "calibration",
+        98721,
+        98921
+      ],
+      [
+        "test",
+        121503,
+        121703
+      ],
+      [
+        "test",
+        144285,
+        144485
+      ]
+    ]
+  },
+  {
+    "file": "8.mirai.udpplain.csv",
+    "sha256": "d5427a26d670848be77e1ae9ceeb5aa27e2920c958a9795001887bf3bc7cfcbb",
+    "size_bytes": 124485105,
+    "rows": 78244,
+    "nonfinite_rows_full_file": 0,
+    "nonfinite_selected_rows_excluded": 0,
+    "ranges": [
+      [
+        "train",
+        7824,
+        8024
+      ],
+      [
+        "train",
+        23473,
+        23673
+      ],
+      [
+        "calibration",
+        39122,
+        39322
+      ],
+      [
+        "calibration",
+        50858,
+        51058
+      ],
+      [
+        "test",
+        62595,
+        62795
+      ],
+      [
+        "test",
+        74331,
+        74531
+      ]
+    ]
+  },
+  {
+    "file": "9.benign.csv",
+    "sha256": "0e0f9c19bce92b3ebbf3173baff120d9ac99ffafb207618cbaea3eba53bcfac3",
+    "size_bytes": 17632741,
+    "rows": 19528,
+    "nonfinite_rows_full_file": 0,
+    "nonfinite_selected_rows_excluded": 0,
+    "ranges": [
+      [
+        "train",
+        1952,
+        2952
+      ],
+      [
+        "train",
+        5858,
+        6858
+      ],
+      [
+        "calibration",
+        9764,
+        10764
+      ],
+      [
+        "calibration",
+        12693,
+        13693
+      ],
+      [
+        "test",
+        15622,
+        16622
+      ],
+      [
+        "test",
+        18551,
+        19528
+      ]
+    ]
+  },
+  {
+    "file": "9.gafgyt.combo.csv",
+    "sha256": "3b0e8d6ecfe610a953d700da0e4b170b3a552513ace8c08d5d038169625acee4",
+    "size_bytes": 105589038,
+    "rows": 59398,
+    "nonfinite_rows_full_file": 0,
+    "nonfinite_selected_rows_excluded": 0,
+    "ranges": [
+      [
+        "train",
+        5939,
+        6139
+      ],
+      [
+        "train",
+        17819,
+        18019
+      ],
+      [
+        "calibration",
+        29699,
+        29899
+      ],
+      [
+        "calibration",
+        38608,
+        38808
+      ],
+      [
+        "test",
+        47518,
+        47718
+      ],
+      [
+        "test",
+        56428,
+        56628
+      ]
+    ]
+  },
+  {
+    "file": "9.gafgyt.junk.csv",
+    "sha256": "204e0933db90873f91954de666894a27c78c07d103fba2d1faa1d62d4fc1090f",
+    "size_bytes": 46573306,
+    "rows": 27413,
+    "nonfinite_rows_full_file": 0,
+    "nonfinite_selected_rows_excluded": 0,
+    "ranges": [
+      [
+        "train",
+        2741,
+        2941
+      ],
+      [
+        "train",
+        8223,
+        8423
+      ],
+      [
+        "calibration",
+        13706,
+        13906
+      ],
+      [
+        "calibration",
+        17818,
+        18018
+      ],
+      [
+        "test",
+        21930,
+        22130
+      ],
+      [
+        "test",
+        26042,
+        26242
+      ]
+    ]
+  },
+  {
+    "file": "9.gafgyt.scan.csv",
+    "sha256": "309d2d47b1360589bd3457b1d73033a2b4eeab275599363be01bf0eba909fdd6",
+    "size_bytes": 38455148,
+    "rows": 28572,
+    "nonfinite_rows_full_file": 0,
+    "nonfinite_selected_rows_excluded": 0,
+    "ranges": [
+      [
+        "train",
+        2857,
+        3057
+      ],
+      [
+        "train",
+        8571,
+        8771
+      ],
+      [
+        "calibration",
+        14286,
+        14486
+      ],
+      [
+        "calibration",
+        18571,
+        18771
+      ],
+      [
+        "test",
+        22857,
+        23057
+      ],
+      [
+        "test",
+        27143,
+        27343
+      ]
+    ]
+  },
+  {
+    "file": "9.gafgyt.tcp.csv",
+    "sha256": "22608905531b663482dc45c66d95199a879e006cd171284bf16f7a72bdaf634e",
+    "size_bytes": 55203340,
+    "rows": 98075,
+    "nonfinite_rows_full_file": 0,
+    "nonfinite_selected_rows_excluded": 0,
+    "ranges": [
+      [
+        "train",
+        9807,
+        10007
+      ],
+      [
+        "train",
+        29422,
+        29622
+      ],
+      [
+        "calibration",
+        49037,
+        49237
+      ],
+      [
+        "calibration",
+        63748,
+        63948
+      ],
+      [
+        "test",
+        78460,
+        78660
+      ],
+      [
+        "test",
+        93171,
+        93371
+      ]
+    ]
+  },
+  {
+    "file": "9.gafgyt.udp.csv",
+    "sha256": "0905dbd1ff34eaad2b4e977fe58ffe0e3aab81e79b2499cc295f2cd5e327d607",
+    "size_bytes": 57969199,
+    "rows": 102980,
+    "nonfinite_rows_full_file": 0,
+    "nonfinite_selected_rows_excluded": 0,
+    "ranges": [
+      [
+        "train",
+        10298,
+        10498
+      ],
+      [
+        "train",
+        30894,
+        31094
+      ],
+      [
+        "calibration",
+        51490,
+        51690
+      ],
+      [
+        "calibration",
+        66937,
+        67137
+      ],
+      [
+        "test",
+        82384,
+        82584
+      ],
+      [
+        "test",
+        97831,
+        98031
+      ]
+    ]
+  },
+  {
+    "file": "9.mirai.ack.csv",
+    "sha256": "67434b1b64e3e27fa3415732f749e4b1c4c099485c156f5aca3c7c0790cf4ff9",
+    "size_bytes": 147187372,
+    "rows": 107187,
+    "nonfinite_rows_full_file": 0,
+    "nonfinite_selected_rows_excluded": 0,
+    "ranges": [
+      [
+        "train",
+        10718,
+        10918
+      ],
+      [
+        "train",
+        32156,
+        32356
+      ],
+      [
+        "calibration",
+        53593,
+        53793
+      ],
+      [
+        "calibration",
+        69671,
+        69871
+      ],
+      [
+        "test",
+        85749,
+        85949
+      ],
+      [
+        "test",
+        101827,
+        102027
+      ]
+    ]
+  },
+  {
+    "file": "9.mirai.scan.csv",
+    "sha256": "bc15d2a4833b9f12f51837c6581fb55c6cf8ed13bc8699c77dcd29c3988b359d",
+    "size_bytes": 43554193,
+    "rows": 43674,
+    "nonfinite_rows_full_file": 0,
+    "nonfinite_selected_rows_excluded": 0,
+    "ranges": [
+      [
+        "train",
+        4367,
+        4567
+      ],
+      [
+        "train",
+        13102,
+        13302
+      ],
+      [
+        "calibration",
+        21837,
+        22037
+      ],
+      [
+        "calibration",
+        28388,
+        28588
+      ],
+      [
+        "test",
+        34939,
+        35139
+      ],
+      [
+        "test",
+        41490,
+        41690
+      ]
+    ]
+  },
+  {
+    "file": "9.mirai.syn.csv",
+    "sha256": "9545795b938ef0ad6744154dd47fe7245e16f45aaebb4fa5ed5196859f035498",
+    "size_bytes": 169089092,
+    "rows": 122479,
+    "nonfinite_rows_full_file": 0,
+    "nonfinite_selected_rows_excluded": 0,
+    "ranges": [
+      [
+        "train",
+        12247,
+        12447
+      ],
+      [
+        "train",
+        36743,
+        36943
+      ],
+      [
+        "calibration",
+        61239,
+        61439
+      ],
+      [
+        "calibration",
+        79611,
+        79811
+      ],
+      [
+        "test",
+        97983,
+        98183
+      ],
+      [
+        "test",
+        116355,
+        116555
+      ]
+    ]
+  },
+  {
+    "file": "9.mirai.udp.csv",
+    "sha256": "bb6f6958b74be6a4055f8795950deefcfd41e4447c04ca48555d2adeae5418a3",
+    "size_bytes": 215629797,
+    "rows": 157084,
+    "nonfinite_rows_full_file": 0,
+    "nonfinite_selected_rows_excluded": 0,
+    "ranges": [
+      [
+        "train",
+        15708,
+        15908
+      ],
+      [
+        "train",
+        47125,
+        47325
+      ],
+      [
+        "calibration",
+        78542,
+        78742
+      ],
+      [
+        "calibration",
+        102104,
+        102304
+      ],
+      [
+        "test",
+        125667,
+        125867
+      ],
+      [
+        "test",
+        149229,
+        149429
+      ]
+    ]
+  },
+  {
+    "file": "9.mirai.udpplain.csv",
+    "sha256": "606bb98a6ffd746e2a33dffc373e8910762f81a90048d2d497a7e0734ed594fb",
+    "size_bytes": 133920179,
+    "rows": 84436,
+    "nonfinite_rows_full_file": 0,
+    "nonfinite_selected_rows_excluded": 0,
+    "ranges": [
+      [
+        "train",
+        8443,
+        8643
+      ],
+      [
+        "train",
+        25330,
+        25530
+      ],
+      [
+        "calibration",
+        42218,
+        42418
+      ],
+      [
+        "calibration",
+        54883,
+        55083
+      ],
+      [
+        "test",
+        67548,
+        67748
+      ],
+      [
+        "test",
+        80214,
+        80414
+      ]
+    ]
+  }
+]

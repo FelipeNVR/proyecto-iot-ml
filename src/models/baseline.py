@@ -1,4 +1,9 @@
-"""Entrenamiento de 3 Anillos de Defensa (Binario, Multiclase de Ataques y Zero-Day Novelty Detection) + LODO Adaptativo y Auditoría ML."""
+"""Entrenamiento HISTÓRICO para reproducibilidad, con limitaciones auditadas.
+
+Para experimentos nuevos usar python -m src.models.rigorous (VALIDACION_REAL.md).
+La CV estratificada de este archivo no es validación temporal prospectiva.
+Las métricas canónicas multiclase fusionan TCP/UDP; no son la tarea original de 10 clases.
+"""
 
 import os
 import sys
@@ -83,7 +88,7 @@ def evaluate_classifier(
 ) -> dict:
     """
     Evalúa un clasificador con:
-    - 5-Fold CV Temporal sin fuga de escalado (Pipeline(StandardScaler, clf) y shuffle=False)
+    - 5-Fold CV estratificada (no temporal) con escalado por fold externo.
     - Métricas en Train, Val y Test (para auditar sobreajuste).
     """
     if run_cv:

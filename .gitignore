@@ -19,3 +19,9 @@ data/*.csv
 !data/features.csv
 !data/stream_sample_real.csv
 data/*.db
+
+# Capturas privadas y cachés/modelos reproducibles de experimentos (métricas sí versionables)
+data/local_captures/
+experiments/**/selected_rows.pkl
+experiments/**/candidate.joblib
+experiments/**/predictions.csv.gz

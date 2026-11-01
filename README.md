@@ -1,5 +1,25 @@
 # 🛡️ Sistema Centralizado de Detección de Anomalías en Redes IoT (CINF200)
 
+## Estado experimental actualizado — 1 de noviembre de 2026
+
+El protocolo recomendado es [VALIDACION_REAL.md](VALIDACION_REAL.md). Se incorporó
+`src/models/rigorous.py`: bloques repartidos a lo largo de las capturas, prueba en
+dispositivo excluido, calibración en otros dispositivos y exclusión de botnets.
+Las métricas históricas que siguen abajo no acreditan preparación para producción.
+El dashboard reproduce un catálogo CSV; no captura por sí mismo tráfico de tu router.
+El extractor online es experimental y necesita equivalencia numérica contra una referencia.
+
+Desde esta carpeta, para una ejecución nueva sin sobrescribir resultados:
+
+```powershell
+.\venv\Scripts\python.exe -m src.models.rigorous --output experiments\rigorous_nueva_ejecucion
+.\venv\Scripts\python.exe -m unittest discover -s tests -v
+```
+
+`experiments/rigorous_v1` contiene la primera ejecución del protocolo nuevo. Sus
+candidatos se guardan separados de `models_registry`; no se promueven automáticamente.
+La sección antigua de entrenamiento mediante `baseline.py` queda como reproducción histórica.
+
 **Autor:** Felipe Nicolás Vergara Rodríguez — Ingeniería Civil Informática, Universidad Andrés Bello (Sede Viña del Mar).  
 **Docente Tutor:** Nicolás Caselli Benavente.  
 **Dataset:** [UCI N-BaIoT Dataset](https://doi.org/10.24432/C5RC8J) (Meidan et al., *IEEE Pervasive Computing*, 2018) — 9 dispositivos IoT comerciales, 115 características por muestra, botnets **Mirai** y **BASHLITE (gafgyt)**.

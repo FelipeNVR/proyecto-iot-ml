@@ -1,0 +1,11 @@
+{
+  "completed": true,
+  "experiments": 73,
+  "production_ready": false,
+  "missing_evidence": [
+    "independent local PCAP sessions",
+    "validated identical offline/online extractor",
+    "event labels and timing",
+    "operational false alarms/hour and detection delays"
+  ]
+}

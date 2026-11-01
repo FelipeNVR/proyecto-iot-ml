@@ -1,0 +1,48 @@
+{
+  "version": 1,
+  "seed": 42,
+  "blocks": {
+    "train": [
+      0.1,
+      0.3
+    ],
+    "calibration": [
+      0.5,
+      0.65
+    ],
+    "test": [
+      0.8,
+      0.95
+    ]
+  },
+  "rows_per_attack_block": 200,
+  "rows_per_benign_block": 1000,
+  "calibration_empirical_fpr_budget": 0.001,
+  "models": [
+    "lr",
+    "rf",
+    "gb"
+  ],
+  "outer_devices": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ],
+  "inner_calibration": "next two device IDs cyclically; other six fit the model",
+  "unknown_family": [
+    "gafgyt",
+    "mirai"
+  ],
+  "notes": [
+    "development benchmark, not an untouched production acceptance set",
+    "no timestamps: positional gaps are not verified temporal embargoes",
+    "fixed samples per file do not represent deployment prevalence",
+    "all model and threshold choices frozen before evaluating test"
+  ]
+}
