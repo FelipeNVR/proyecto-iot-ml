@@ -866,7 +866,7 @@ with st.expander(
         - **Verificación de Auditoría ML:** Prueba de sanidad (*Y-Randomization*) `F1 = {ver_info.get('y_randomization_sanity_f1', 0.54):.4f}` (control exploratorio; una sola permutación) | Estabilidad Multi-Semilla (`5 seeds`) `F1 = {ver_info.get('multi_seed_rf_f1_mean', 1.0):.4f} ± {ver_info.get('multi_seed_rf_f1_std', 0.0):.4f}` | Muestra posterior de las mismas capturas (`+10.000 filas`) `RF F1 = {ver_info.get('distant_horizon_rf_f1', 0.9998):.4f}` (`FPR = {ver_info.get('distant_horizon_rf_fpr', 0.0)*100:.2f}%`).
         """
     )
-    st.info('El entrenamiento histórico conserva limitaciones conocidas. Use el protocolo por dispositivos y periodos documentado en VALIDACION_REAL.md; sus candidatos no se promueven automáticamente.')
+    st.info('El entrenamiento histórico conserva limitaciones conocidas. Los candidatos del protocolo 6/2/1 se mantienen separados en experiments/rigorous_v1/ y se enrutan dinámicamente cuando el modo "Evaluación Ciega 6/2/1" está activo en la barra lateral.')
 
 # ----------------- COMPARATIVA EXPERIMENTAL DE MODELOS Y EXPLICABILIDAD -----------------
 st.markdown("---")

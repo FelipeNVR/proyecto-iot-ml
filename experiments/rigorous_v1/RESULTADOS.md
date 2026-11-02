@@ -60,7 +60,7 @@ Resultados exploratorios. No se seleccionó un ganador para producción mirando 
 - El diagnóstico de coincidencias exactas está en cada metrics.json y en summary.csv. No certifica ausencia de casi duplicados ni de dependencia estadística.
 - No se crearon intervalos por paquete que supongan independencia falsa. Faltan sesiones/días independientes para incertidumbre operacional.
 - No se ejecutó una captura del router ni se certificó el extractor. La evidencia en tu cámara sigue pendiente.
-- Los resultados nuevos y antiguos permanecen separados. Ningún candidato fue promovido al registro del dashboard.
+- Los resultados nuevos y antiguos permanecen separados. Los candidatos 6/2/1 (`device_1_rf` a `device_9_rf`) están disponibles en el dashboard mediante el modo de enrutamiento ciego por dispositivo (verificados con `candidate_hashes.json`).
 
 ## Artefactos y verificaciones
 

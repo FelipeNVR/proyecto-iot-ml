@@ -16,8 +16,8 @@ Desde esta carpeta, para una ejecución nueva sin sobrescribir resultados:
 .\venv\Scripts\python.exe -m unittest discover -s tests -v
 ```
 
-`experiments/rigorous_v1` contiene la primera ejecución del protocolo nuevo. Sus
-candidatos se guardan separados de `models_registry`; no se promueven automáticamente.
+`experiments/rigorous_v1` contiene la primera ejecución del protocolo nuevo (73 experimentos). Sus
+candidatos (`device_1_rf` a `device_9_rf`) se guardan separados de `models_registry`, verificados con `candidate_hashes.json`, y el Dashboard permite enrutarlos dinámicamente por dispositivo atacado mediante el modo **Evaluación Ciega 6/2/1**.
 La sección antigua de entrenamiento mediante `baseline.py` queda como reproducción histórica.
 
 **Autor:** Felipe Nicolás Vergara Rodríguez — Ingeniería Civil Informática, Universidad Andrés Bello (Sede Viña del Mar).  
@@ -77,7 +77,7 @@ pip install -r requirements.txt
 .\venv\Scripts\python.exe src/models/baseline.py
 ```
 
-### 3. Ejecutar la Suite de Pruebas Automatizadas (6 tests de regresión y seguridad)
+### 3. Ejecutar la Suite de Pruebas Automatizadas (20 tests de contratos, protocolo 6/2/1 y regresión)
 ```powershell
 .\venv\Scripts\python.exe -m unittest discover -s tests -v
 ```
