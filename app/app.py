@@ -161,6 +161,36 @@ def load_verified_models(registry_dir: str):
     return scaler, models_dict, mc_model, zd_model
 
 
+@st.cache_resource
+def load_blind_lodo_candidates(registry_dir: str) -> dict:
+    """Carga los 9 modelos de rotación ciega 6/2/1 (experiments/rigorous_v1/device_{i}_rf/candidate.joblib)
+    verificando su hash SHA-256 contra candidate_hashes.json. En cada fold i, el Dispositivo i
+    tiene 0% de muestras en entrenamiento y calibración."""
+    exp_root = os.path.join(os.path.dirname(registry_dir), "experiments", "rigorous_v1")
+    hashes_path = os.path.join(exp_root, "candidate_hashes.json")
+    if not os.path.exists(hashes_path):
+        return {}
+    try:
+        with open(hashes_path, "r", encoding="utf-8") as f:
+            cand_hashes = json.load(f)
+    except Exception:
+        return {}
+
+    blind_dict = {}
+    for dev_id in range(1, 10):
+        rel_key_win = f"device_{dev_id}_rf\\candidate.joblib"
+        rel_key_posix = f"device_{dev_id}_rf/candidate.joblib"
+        expected_sha = cand_hashes.get(rel_key_win) or cand_hashes.get(rel_key_posix, "")
+        cand_path = os.path.join(exp_root, f"device_{dev_id}_rf", "candidate.joblib")
+        if os.path.exists(cand_path) and expected_sha:
+            if verify_file_sha256(cand_path, expected_sha):
+                cand_obj = joblib.load(cand_path)
+                if hasattr(cand_obj.get("model"), "n_jobs"):
+                    cand_obj["model"].n_jobs = 1
+                blind_dict[dev_id] = cand_obj
+    return blind_dict
+
+
 # ----------------- CONTROL DE ACCESO (JWT + HMAC) -----------------
 JWT_SECRET = os.environ.get("CINF200_JWT_SECRET", "super-secret-iot-unab-2026-key")
 EXPECTED_USER = os.environ.get(
@@ -268,6 +298,7 @@ try:
     scaler, models_dict, multiclass_model, zeroday_model = load_verified_models(
         REGISTRY_DIR
     )
+    blind_lodo_candidates = load_blind_lodo_candidates(REGISTRY_DIR)
 except SecurityIntegrityError as err:
     st.error(f"🚨 ALERTA DE SEGURIDAD CRÍTICA: {err}")
     st.stop()
@@ -293,6 +324,16 @@ else:
 # Controles de Defensa Activa IPS
 st.sidebar.markdown("---")
 st.sidebar.subheader("🛡️ Políticas de Prevención Activa (IPS)")
+blind_lodo_enabled = st.sidebar.toggle(
+    "🔬 Evaluación Ciega 6/2/1 (Dispositivo Excluido de Train)",
+    value=bool(blind_lodo_candidates),
+    disabled=not bool(blind_lodo_candidates),
+    help=(
+        "Al evaluar o atacar el Dispositivo X, utiliza el modelo entrenado exclusivamente "
+        "en otros 6 dispositivos (y calibrado en otros 2), garantizando 0% de muestras del "
+        "Dispositivo X en entrenamiento."
+    ),
+)
 adaptive_thr_enabled = st.sidebar.toggle(
     "Umbral Adaptativo por Perfil (Anti-FPR Cámaras)",
     value=True,
@@ -342,14 +383,28 @@ def evaluate_and_record_packet(packet: dict) -> dict:
     )
     dev_label = f"{dev_id}. {dev_name} ({dev_ip})"
 
-    # Anillo 1: Probabilidad supervisada + Umbral Adaptativo según perfil del dispositivo
-    prob = (
-        float(model.predict_proba(feat_scaled)[0][1])
-        if hasattr(model, "predict_proba")
-        else float(model.predict(feat_scaled)[0])
-    )
-    threshold = get_adaptive_threshold(dev_id, adaptive_enabled=adaptive_thr_enabled)
-    pred_ring1 = 1 if prob >= threshold else 0
+    # Anillo 1: Probabilidad supervisada + Umbral Adaptativo o Modelo Ciego 6/2/1
+    if blind_lodo_enabled and dev_id in blind_lodo_candidates:
+        cand_obj = blind_lodo_candidates[dev_id]
+        cand_mdl = cand_obj["model"]
+        cand_cols = cand_obj["features"]
+        prob = float(cand_mdl.predict_proba(packet["features"][cand_cols])[0][1])
+        threshold = round(float(cand_obj["threshold"]), 4) if adaptive_thr_enabled else 0.50
+        pred_ring1 = 1 if prob >= threshold else 0
+        tr_devs = cand_obj["metadata"].get("train_devices", [])
+        cal_devs = cand_obj["metadata"].get("calibration_devices", [])
+        eval_mode_label = (
+            f"RF Ciego 6/2/1 (Train:{tr_devs} | Cal:{cal_devs} | Disp.{dev_id} 0% visto)"
+        )
+    else:
+        prob = (
+            float(model.predict_proba(feat_scaled)[0][1])
+            if hasattr(model, "predict_proba")
+            else float(model.predict(feat_scaled)[0])
+        )
+        threshold = get_adaptive_threshold(dev_id, adaptive_enabled=adaptive_thr_enabled)
+        pred_ring1 = 1 if prob >= threshold else 0
+        eval_mode_label = selected_model_label.split(" (")[0]
 
     # Anillo 3: Detector No Supervisado Zero-Day (LocalOutlierFactor)
     zeroday_flag = False
@@ -396,7 +451,7 @@ def evaluate_and_record_packet(packet: dict) -> dict:
 
         incident_store.log_incident(
             timestamp=packet["timestamp"],
-            model_name=f"{selected_model_label.split(' (')[0]} + Anillo 2",
+            model_name=f"{eval_mode_label} + Anillo 2",
             attack_type=(
                 f"IA:{ai_predicted_attack} | Real:{packet['simulated_ground_truth']} "
                 f"| Causa:{root_cause_str}"
@@ -416,6 +471,7 @@ def evaluate_and_record_packet(packet: dict) -> dict:
         "ID": packet["packet_id"],
         "Hora": packet["timestamp"],
         "Dispositivo_IoT": dev_label,
+        "Modo_Evaluación": eval_mode_label,
         "CSV_Real_Origen": packet.get("source_csv", "N-BaIoT"),
         "Real_CSV": packet["simulated_ground_truth"],
         "Predicción_IA_Anillo2": ai_predicted_attack,
@@ -469,6 +525,14 @@ selected_dev_str = st.sidebar.selectbox(
     "Dispositivo IoT Origen", options=list(device_options.keys()), index=0
 )
 selected_dev_id = device_options[selected_dev_str]
+
+if blind_lodo_enabled and selected_dev_id in blind_lodo_candidates:
+    c_meta = blind_lodo_candidates[selected_dev_id]["metadata"]
+    st.sidebar.info(
+        f"🔬 **Fold Ciego 6/2/1 Activo:** Al atacar el **Disp. {selected_dev_id}**, se evalúa con el modelo "
+        f"`device_{selected_dev_id}_rf` entrenado solo en Disp. `{c_meta['train_devices']}` y calibrado en "
+        f"`{c_meta['calibration_devices']}` (**0% de datos del Disp. {selected_dev_id} en entrenamiento**)."
+    )
 
 available_attacks = st.session_state.emulator.get_available_attacks(
     device_id=selected_dev_id
@@ -525,7 +589,7 @@ if st.session_state.last_injected_info is not None:
     if info["Veredicto"] == "MALICIOSO":
         st.error(
             f"🎯 **Inspección Forense de 3 Anillos:** Archivo real **`{info['CSV_Real_Origen']}`** "
-            f"({info['Dispositivo_IoT']}) | **Etiqueta Real CSV:** `{info['Real_CSV']}` ➡️ "
+            f"({info['Dispositivo_IoT']}) | **Modelo Evaluador:** `{info.get('Modo_Evaluación', 'N/A')}` | **Etiqueta Real CSV:** `{info['Real_CSV']}` ➡️ "
             f"**Anillo 1:** `{info['Veredicto']}` (Score `{info['Score_Anomalía']:.4f}` vs Umbral `{info['Umbral_Disp']}`) | "
             f"**Anillo 2 (Firma Predicha por IA sin ver etiqueta):** **`{info['Predicción_IA_Anillo2']}`** | "
             f"**Causa Raíz Física (Z-Score):** `{info['Causa_Raíz_ZScore']}` | "
@@ -534,7 +598,7 @@ if st.session_state.last_injected_info is not None:
     else:
         st.success(
             f"✅ **Inspección Forense de 3 Anillos:** Archivo real **`{info['CSV_Real_Origen']}`** "
-            f"({info['Dispositivo_IoT']}) | **Tráfico Real:** `{info['Real_CSV']}` ➡️ "
+            f"({info['Dispositivo_IoT']}) | **Modelo Evaluador:** `{info.get('Modo_Evaluación', 'N/A')}` | **Tráfico Real:** `{info['Real_CSV']}` ➡️ "
             f"**Clasificado como `BENIGNO`** (Score `{info['Score_Anomalía']:.4f}` < Umbral `{info['Umbral_Disp']}`) "
             f"en **`{info['Latencia_ms']:.2f} ms`**."
         )
