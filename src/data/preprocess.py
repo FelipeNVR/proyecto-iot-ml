@@ -1,4 +1,4 @@
-"""Módulo de ingesta, limpieza de artefactos Unix Epoch y partición temporal 70/15/15 en los 9 dispositivos N-BaIoT."""
+"""Módulo de ingesta, limpieza de artefactos Unix Epoch y partición temporal 65/15/15 (+2.5% purga) en los 9 dispositivos N-BaIoT."""
 
 import os
 import glob

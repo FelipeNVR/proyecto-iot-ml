@@ -46,11 +46,11 @@ proyecto-iot-ml/
 │   ├── model_gradient_boosting.pkl  # HistGradientBoostingClassifier
 │   ├── model_svm.pkl                # LinearSVC con calibración sigmoide (Platt scaling)
 │   ├── artifacts_sha256.json        # Manifiesto criptográfico SHA-256 contra deserialización insegura
-│   ├── baseline_metrics.json        # Métricas completas (70/15/15 + 5-Fold CV + Latencia + Top 15 Features)
+│   ├── baseline_metrics.json        # Métricas completas (65/15/15 + 5-Fold CV + Latencia + Top 15 Features)
 │   └── lodo_metrics.json            # Resultados de los 9 folds Leave-One-Device-Out (LODO) + test de Wilcoxon
 ├── src/
 │   ├── data/
-│   │   └── preprocess.py            # Ingesta de 10 ataques, estabilización HH_jit y partición temporal 70/15/15
+│   │   └── preprocess.py            # Ingesta de 10 ataques, estabilización HH_jit y partición temporal 65/15/15 (+purga)
 │   ├── models/
 │   │   └── baseline.py              # Entrenamiento de línea base + 4 modelos, 5-Fold CV y LODO
 │   └── streaming/

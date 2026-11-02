@@ -739,7 +739,16 @@ with col_mitigation:
         d_label = f"{d_id}. {DEVICE_NAMES[d_id]} ({DEVICE_IPS[d_id]})"
         n_alerts = alerts_map.get(d_label, 0)
         is_q = d_id in st.session_state.quarantined_devices
-        thr_val = get_adaptive_threshold(d_id, adaptive_enabled=adaptive_thr_enabled)
+        if blind_lodo_enabled and d_id in blind_lodo_candidates:
+            thr_val = (
+                round(float(blind_lodo_candidates[d_id]["threshold"]), 4)
+                if adaptive_thr_enabled
+                else 0.50
+            )
+            fold_str = f"device_{d_id}_rf (0% visto)"
+        else:
+            thr_val = get_adaptive_threshold(d_id, adaptive_enabled=adaptive_thr_enabled)
+            fold_str = "Histórico 65/15/15"
         if is_q:
             estado_str = "🔒 AISLADO (DROP en Firewall)"
         elif n_alerts > 0:
@@ -751,6 +760,7 @@ with col_mitigation:
             {
                 "Dispositivo IoT (IP LAN)": d_label,
                 "MAC Física": DEVICE_MACS[d_id],
+                "Modelo / Fold": fold_str,
                 "Umbral IA": thr_val,
                 "Estado IPS": estado_str,
                 "Ataques": n_alerts,
@@ -782,6 +792,7 @@ with col_chart:
                     "ID",
                     "Hora",
                     "Dispositivo_IoT",
+                    "Modo_Evaluación",
                     "Real_CSV",
                     "Predicción_IA_Anillo2",
                     "Veredicto",
@@ -859,11 +870,12 @@ with st.expander(
     ver_info = metrics_data.get("ml_audit_verification", {})
     st.markdown(
         f"""
-        - **Fase Offline ([`src/models/baseline.py`](file:///c:/Users/felip/Documents/Mi_Cerebro_Universitario/INTEGRADOR%20II%20SEM%20LIC%20EN%20CS/proyecto-iot-ml/src/models/baseline.py)):** Último entrenamiento registrado el `{audit_info.get('trained_at', '2026-10-26')}` en `{audit_info.get('total_pipeline_duration_sec', 66.0)} s` sobre los **9 dispositivos IoT** (`Train = {metrics_data.get('train_samples', 29250)}`, `Val = {metrics_data.get('val_samples', 6715)}`, `Test = {metrics_data.get('test_samples', 6785)}`) con **ventanas de purga temporal (embargo 2.5%)** y **5-Fold CV sin fuga de escalado**.
+        - **Protocolo Riguroso 6/2/1 ([`src/models/rigorous.py`](file:///c:/Users/felip/Documents/Mi_Cerebro_Universitario/INTEGRADOR%20II%20SEM%20LIC%20EN%20CS/proyecto-iot-ml/src/models/rigorous.py)):** 73 experimentos auditados sobre los 89 archivos CSV (`7.062.606` filas inspeccionadas, `0` NaN/Inf). Entrena 9 modelos en rotación (`device_1_rf` a `device_9_rf`), usando 6 dispositivos para ajuste (bloques 10% y 30%), 2 dispositivos para calibrar el umbral ($\\text{{FPR}} \\le 0.1\\%$, bloques 50% y 65%) y 1 dispositivo 100% excluido para prueba ciega (bloques 80% y 95%).
+        - **Fase Offline Histórica ([`src/models/baseline.py`](file:///c:/Users/felip/Documents/Mi_Cerebro_Universitario/INTEGRADOR%20II%20SEM%20LIC%20EN%20CS/proyecto-iot-ml/src/models/baseline.py)):** Último entrenamiento registrado el `{audit_info.get('trained_at', '2026-10-26')}` en `{audit_info.get('total_pipeline_duration_sec', 65.61)} s` sobre los **9 dispositivos IoT** (`Train = {metrics_data.get('train_samples', 29215)}`, `Val = {metrics_data.get('val_samples', 6785)}`, `Test = {metrics_data.get('test_samples', 6785)}`) con **ventanas de purga temporal (65/15/15 + embargo 2.5%)** y **5-Fold CV**. Incluye `DummyClassifier` (`strategy="most_frequent"`, `F1 = 0.0`, `Accuracy = 49.74%`) como piso de control estadístico.
         - **Anillo 1 (Binario Supervisado):** 5 modelos entrenados sin fuga de timestamp Unix (`HH_jit_*_mean` y `_variance` neutralizados; `HH_jit_*_weight` preservado).
-        - **Anillo 2 (Clasificador Multiclase Balanceado — `model_multiclass_attack.pkl`):** Identifica la firma de ataque con **Accuracy Canónico = `{mc_info.get('accuracy', 0.93):.4f}`** y **F1-Macro = `{mc_info.get('f1_macro', 0.93):.4f}`**.
-        - **Anillo 3 (Cazador Zero-Day No Supervisado — `model_zeroday_iforest.pkl`):** `LocalOutlierFactor (Novelty Detection)` entrenado **exclusivamente con tráfico 100% Benigno**; logra detectar el **`{zd_info.get('attack_detection_recall', 0.75)*100:.2f}%` de los ataques** (`F1 = {zd_info.get('f1_score', 0.83):.4f}`) sin haber visto jamás un solo ataque durante su entrenamiento.
-        - **Verificación de Auditoría ML:** Prueba de sanidad (*Y-Randomization*) `F1 = {ver_info.get('y_randomization_sanity_f1', 0.54):.4f}` (control exploratorio; una sola permutación) | Estabilidad Multi-Semilla (`5 seeds`) `F1 = {ver_info.get('multi_seed_rf_f1_mean', 1.0):.4f} ± {ver_info.get('multi_seed_rf_f1_std', 0.0):.4f}` | Muestra posterior de las mismas capturas (`+10.000 filas`) `RF F1 = {ver_info.get('distant_horizon_rf_f1', 0.9998):.4f}` (`FPR = {ver_info.get('distant_horizon_rf_fpr', 0.0)*100:.2f}%`).
+        - **Anillo 2 (Clasificador Multiclase Balanceado — `model_multiclass_attack.pkl`):** Identifica la firma de ataque con **Accuracy en 9 firmas canónicas (TCP/UDP fusionados) = `{mc_info.get('accuracy', 0.9176):.4f}`** (`F1-Macro = {mc_info.get('f1_macro', 0.9173):.4f}`) y **Accuracy en 10 clases brutas = `{mc_info.get('raw_10_classes_accuracy', 0.7956):.4f}`** (`F1-Macro = {mc_info.get('raw_10_classes_f1_macro', 0.7922):.4f}`).
+        - **Anillo 3 (Cazador Zero-Day No Supervisado — `model_zeroday_iforest.pkl`):** `LocalOutlierFactor (Novelty Detection)` entrenado **exclusivamente con tráfico 100% Benigno**; logra detectar el **`{zd_info.get('attack_detection_recall', 0.756)*100:.2f}%` de los ataques** (`F1 = {zd_info.get('f1_score', 0.8369):.4f}`) sin haber visto jamás un solo ataque durante su entrenamiento.
+        - **Verificación de Auditoría ML:** Prueba de sanidad (*Y-Randomization*) `F1 = {ver_info.get('y_randomization_sanity_f1', 0.5629):.4f}` (control exploratorio; una sola permutación) | Estabilidad Multi-Semilla (`5 seeds`) `F1 = {ver_info.get('multi_seed_rf_f1_mean', 1.0):.4f} ± {ver_info.get('multi_seed_rf_f1_std', 0.0):.4f}` | Muestra posterior de las mismas capturas (`+10.000 filas`) `RF F1 = {ver_info.get('distant_horizon_rf_f1', 0.9998):.4f}` (`FPR = {ver_info.get('distant_horizon_rf_fpr', 0.0)*100:.2f}%`).
         """
     )
     st.info('El entrenamiento histórico conserva limitaciones conocidas. Los candidatos del protocolo 6/2/1 se mantienen separados en experiments/rigorous_v1/ y se enrutan dinámicamente cuando el modo "Evaluación Ciega 6/2/1" está activo en la barra lateral.')
