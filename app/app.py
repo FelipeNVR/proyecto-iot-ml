@@ -971,6 +971,68 @@ with tab_overview:
         unsafe_allow_html=True,
     )
 
+    # Modo "Escenario Guiado de 1 Clic" (intuitivo para demostraciones y usuarios sin perfil técnico)
+    st.caption("Escenarios guiados de demostración (1 clic)")
+    sc1, sc2, sc3 = st.columns(3)
+    with sc1:
+        if st.button(
+            "1. Día normal en casa",
+            key="guided_normal",
+            use_container_width=True,
+            help="Reinicia el estado y envía tráfico benigno real desde 5 dispositivos domésticos.",
+        ):
+            if model is not None and scaler is not None:
+                incident_store.clear_all()
+                st.session_state.stream_data = []
+                st.session_state.quarantined_devices = set()
+                st.session_state.firewall_rules_log = {}
+                last_rec = None
+                for dev_i in [1, 2, 4, 5, 7]:
+                    pkt = st.session_state.emulator.inject_specific_trace(
+                        attack_type="Benigno", device_id=dev_i
+                    )
+                    last_rec = evaluate_and_record_packet(pkt)
+                st.session_state.last_injected_info = last_rec
+                st.rerun()
+    with sc2:
+        if st.button(
+            "2. Ataque Mirai en cámara",
+            key="guided_mirai",
+            use_container_width=True,
+            help="Simula un ataque real Mirai UDP en la Cámara #5 usando el modelo ciego device_5_rf (0% visto).",
+        ):
+            if model is not None and scaler is not None:
+                atks_5 = st.session_state.emulator.get_available_attacks(device_id=5)
+                mirai_choice = next((a for a in atks_5 if "Mirai_UDP" in a), atks_5[1] if len(atks_5) > 1 else atks_5[0])
+                last_rec = None
+                for _ in range(3):
+                    pkt = st.session_state.emulator.inject_specific_trace(
+                        attack_type=mirai_choice, device_id=5
+                    )
+                    last_rec = evaluate_and_record_packet(pkt)
+                st.session_state.last_injected_info = last_rec
+                st.rerun()
+    with sc3:
+        if st.button(
+            "3. Ataque BASHLITE / Zero-Day",
+            key="guided_bashlite",
+            use_container_width=True,
+            help="Simula un ataque BASHLITE en el Monitor #4 evaluado con el fold ciego device_4_rf y el Anillo 3 LOF.",
+        ):
+            if model is not None and scaler is not None:
+                atks_4 = st.session_state.emulator.get_available_attacks(device_id=4)
+                bash_choice = next((a for a in atks_4 if "BASHLITE" in a), atks_4[1] if len(atks_4) > 1 else atks_4[0])
+                last_rec = None
+                for _ in range(3):
+                    pkt = st.session_state.emulator.inject_specific_trace(
+                        attack_type=bash_choice, device_id=4
+                    )
+                    last_rec = evaluate_and_record_packet(pkt)
+                st.session_state.last_injected_info = last_rec
+                st.rerun()
+
+    st.markdown("<div style='height:0.35rem;'></div>", unsafe_allow_html=True)
+
     k1, k2, k3, k4 = st.columns(4)
     with k1:
         st.markdown(
