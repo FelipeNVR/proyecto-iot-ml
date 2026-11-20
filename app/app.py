@@ -75,9 +75,10 @@ def inject_minimal_css():
         header[data-testid="stHeader"] {
             background: rgba(248, 250, 252, 0.85);
             backdrop-filter: blur(8px);
+            height: 2.4rem;
         }
         .block-container {
-            padding-top: 1.8rem;
+            padding-top: 3.1rem;
             padding-bottom: 2.5rem;
             max-width: 1320px;
         }
@@ -762,6 +763,7 @@ def evaluate_and_record_packet(packet: dict) -> dict:
     dev_ip = str(packet.get("device_ip", DEVICE_IPS.get(dev_id, f"192.168.1.{100 + dev_id}")))
     dev_label = f"{dev_id}. {dev_name} ({dev_ip})"
 
+    t_ring1_start = time.perf_counter()
     if blind_lodo_enabled and dev_id in blind_lodo_candidates:
         cand_obj = blind_lodo_candidates[dev_id]
         cand_mdl = cand_obj["model"]
@@ -779,6 +781,7 @@ def evaluate_and_record_packet(packet: dict) -> dict:
         threshold = get_adaptive_threshold(dev_id, adaptive_enabled=adaptive_thr_enabled)
         pred_ring1 = 1 if prob >= threshold else 0
         eval_mode_label = selected_model_label
+    ring1_latency_ms = (time.perf_counter() - t_ring1_start) * 1000.0
 
     zeroday_flag = False
     if enable_zeroday_ring and zeroday_model is not None:
@@ -805,7 +808,8 @@ def evaluate_and_record_packet(packet: dict) -> dict:
     root_cause_str = extract_root_cause_zscores(
         feat_scaled[0], st.session_state.emulator.feature_cols, top_k=3
     )
-    latency_ms = (time.perf_counter() - t_start) * 1000.0
+    total_latency_ms = (time.perf_counter() - t_start) * 1000.0
+    latency_ms = ring1_latency_ms
     already_quarantined = dev_id in st.session_state.quarantined_devices
 
     if is_malicious:
@@ -850,6 +854,7 @@ def evaluate_and_record_packet(packet: dict) -> dict:
         "Explicación_Humana": translate_root_cause_human(root_cause_str, ai_predicted_attack),
         "Acción_IPS": action_str,
         "Latencia_ms": round(latency_ms, 2),
+        "Latencia_Total_3Anillos_ms": round(total_latency_ms, 2),
         "ZeroDay_Flag": zeroday_flag,
     }
     st.session_state.stream_data.append(record)
@@ -1057,9 +1062,9 @@ with tab_overview:
         )
     with k4:
         st.markdown(
-            f"""<div class="kpi-box"><div class="kpi-label">Tiempo de respuesta</div>
+            f"""<div class="kpi-box"><div class="kpi-label">Latencia Anillo 1</div>
             <div class="kpi-val">{st.session_state.last_latency_ms:.2f} ms</div>
-            <div class="kpi-sub">Inferencia CPU (meta ≤ 10 ms)</div></div>""",
+            <div class="kpi-sub">Detección CPU (meta ≤ 10 ms)</div></div>""",
             unsafe_allow_html=True,
         )
 
