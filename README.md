@@ -56,11 +56,25 @@ proyecto-iot-ml/
 │   └── streaming/
 │       ├── emulator.py              # Emulador de tráfico en vivo controlado por probabilidad de ataque
 │       └── incident_store.py        # Persistencia relacional SQLite con consultas parametrizadas
+├── docs/
+│   ├── PORTAFOLIO_E3_CINF200.md               # Índice maestro del portafolio técnico (10 evidencias)
+│   ├── METODOLOGIA_SCRUM_PROYECTO.md          # Planificación ágil por Sprints (2026-2 y continuidad 2027)
+│   ├── FEEDBACK_PROFESOR_E2_Y_METODOLOGIA.md  # Marco metodológico híbrido CRISP-DM / CRISP-ML(Q) + Scrum
+│   └── latex/                                 # Fuentes LaTeX reproducibles (main.tex, poster_E3.tex, references.bib y figuras)
 ├── tests/
-│   └── test_pipeline.py             # Suite de pruebas unitarias, de integración y regresión
+│   ├── test_pipeline.py             # Suite de pruebas unitarias, de integración y regresión
+│   ├── test_rigorous.py             # Pruebas de disyunción de bloques, calibración y roles 6/2/1
+│   └── test_reporting.py            # Pruebas de integridad y no-fuga en reportes
 ├── 01_exploracion_dataset.ipynb     # Notebook exploratorio ejecutado con estadísticas de los 9 dispositivos
 └── requirements.txt                 # Dependencias del proyecto
 ```
+
+## 📚 Documentación, Portafolio y Metodología
+
+- **Portafolio Maestro de Evidencias:** [docs/PORTAFOLIO_E3_CINF200.md](docs/PORTAFOLIO_E3_CINF200.md)
+- **Metodología Híbrida (`CRISP-DM / CRISP-ML(Q)` + `Scrum`):** [docs/FEEDBACK_PROFESOR_E2_Y_METODOLOGIA.md](docs/FEEDBACK_PROFESOR_E2_Y_METODOLOGIA.md) y [docs/METODOLOGIA_SCRUM_PROYECTO.md](docs/METODOLOGIA_SCRUM_PROYECTO.md)
+- **Fuentes del Artículo Científico y Póster A0:** [docs/latex/main.tex](docs/latex/main.tex), [docs/latex/poster_E3.tex](docs/latex/poster_E3.tex) y [docs/latex/references.bib](docs/latex/references.bib)
+- **Resultados del Protocolo Riguroso 6/2/1 (73 experimentos):** [experiments/rigorous_v1/RESULTADOS.md](experiments/rigorous_v1/RESULTADOS.md)
 
 ---
 
