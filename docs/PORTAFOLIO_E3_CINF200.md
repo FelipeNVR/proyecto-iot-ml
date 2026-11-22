@@ -16,8 +16,8 @@
 | **2** | **Matriz de fuentes y estado del arte** | `main.tex` (Sección 4, Tabla 1: 6 estudios 2018–2026) y `references.bib` (10 referencias IEEE) | ✅ Completo |
 | **3** | **Plan de trabajo actualizado** | `main.tex` (Sección 6.4: Etapas 1–7 2026-2 + Continuidad 8–11 2027-1 + Cartas Gantt) y `METODOLOGIA_SCRUM_PROYECTO.md` (Sprints 1–7) | ✅ Completo |
 | **4** | **Diseño metodológico y arquitectura** | `main.tex` (Sección 5: Metodología Híbrida CRISP-DM / CRISP-ML(Q) + Scrum; Sección 7: Arquitectura Doble Pipeline, 3 Anillos y 7 ADRs) y `FEEDBACK_PROFESOR_E2_Y_METODOLOGIA.md` | ✅ Completo |
-| **5** | **Código, prototipo y MVP técnico** | `proyecto-iot-ml/` (`src/data/preprocess.py`, `src/models/baseline.py`, `src/models/rigorous.py`, `src/streaming/`, `app/app.py`) | ✅ Completo |
-| **6** | **Pruebas y resultados reproducibles** | `proyecto-iot-ml/experiments/rigorous_v1/` (**73 experimentos**, `summary.csv`, `RESULTADOS.md`), `models_registry/` y `tests/` (**20/20 tests OK**) | ✅ Completo |
+| **5** | **Código, prototipo y MVP técnico** | `proyecto-iot-ml/` (`src/data/preprocess.py`, `src/models/baseline.py`, `src/models/rigorous.py`, `src/streaming/device_onboarding.py`, `app/app.py`) | ✅ Completo |
+| **6** | **Pruebas y resultados reproducibles** | `proyecto-iot-ml/experiments/rigorous_v1/` (**73 experimentos**, `summary.csv`, `RESULTADOS.md`), `models_registry/` y `tests/` (**25/25 tests OK**) | ✅ Completo |
 | **7** | **Paper final (Formato IEEE/UNAB)** | `main.tex` (11 secciones + Referencias + Anexos A, B y C) + figuras 300 DPI | ✅ Completo |
 | **8** | **Póster académico** | `poster_E3.tex` (Formato A0 vertical en 3 columnas con 5 figuras y KPIs) | ✅ Completo |
 | **9** | **Presentación final y guión de defensa** | `presentacion_E3.tex` (Beamer 16:9, 16 láminas) y `GUION_DEFENSA_FINAL_E3.md` | ✅ Completo |

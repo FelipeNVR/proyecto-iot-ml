@@ -55,16 +55,21 @@ proyecto-iot-ml/
 │   │   └── baseline.py              # Entrenamiento de línea base + 4 modelos, 5-Fold CV y LODO
 │   └── streaming/
 │       ├── emulator.py              # Emulador de tráfico en vivo controlado por probabilidad de ataque
-│       └── incident_store.py        # Persistencia relacional SQLite con consultas parametrizadas
+│       ├── incident_store.py        # Persistencia relacional SQLite con consultas parametrizadas
+│       ├── firewall_controller.py   # Reglas iptables/nftables (IP+MAC) y Whitelist Anti-Lockout
+│       ├── live_feature_extractor.py # Prototipo incremental O(1) de 115 variables
+│       └── device_onboarding.py     # Modo Aprendizaje 24h (Q99.5+0.05) y Modo Invitados Social
 ├── docs/
 │   ├── PORTAFOLIO_E3_CINF200.md               # Índice maestro del portafolio técnico (10 evidencias)
 │   ├── METODOLOGIA_SCRUM_PROYECTO.md          # Planificación ágil por Sprints (2026-2 y continuidad 2027)
 │   ├── FEEDBACK_PROFESOR_E2_Y_METODOLOGIA.md  # Marco metodológico híbrido CRISP-DM / CRISP-ML(Q) + Scrum
+│   ├── AUDITORIA_PRODUCTO_APP.md              # Auditoría técnica/UX y plan de producto
 │   └── latex/                                 # Fuentes LaTeX reproducibles (main.tex, poster_E3.tex, references.bib y figuras)
 ├── tests/
 │   ├── test_pipeline.py             # Suite de pruebas unitarias, de integración y regresión
 │   ├── test_rigorous.py             # Pruebas de disyunción de bloques, calibración y roles 6/2/1
-│   └── test_reporting.py            # Pruebas de integridad y no-fuga en reportes
+│   ├── test_reporting.py            # Pruebas de integridad y no-fuga en reportes
+│   └── test_onboarding.py           # Pruebas de Modo Aprendizaje 24h y ráfaga de invitados (+9 equipos)
 ├── 01_exploracion_dataset.ipynb     # Notebook exploratorio ejecutado con estadísticas de los 9 dispositivos
 └── requirements.txt                 # Dependencias del proyecto
 ```
@@ -91,7 +96,7 @@ pip install -r requirements.txt
 .\venv\Scripts\python.exe src/models/baseline.py
 ```
 
-### 3. Ejecutar la Suite de Pruebas Automatizadas (20 tests de contratos, protocolo 6/2/1 y regresión)
+### 3. Ejecutar la Suite de Pruebas Automatizadas (25 tests de contratos, protocolo 6/2/1, onboarding 24h y regresión)
 ```powershell
 .\venv\Scripts\python.exe -m unittest discover -s tests -v
 ```
