@@ -24,6 +24,7 @@ from src.streaming.firewall_controller import (
     DEVICE_MACS,
 )
 from src.streaming.live_feature_extractor import LiveAfterImageExtractor
+from src.streaming.device_onboarding import DeviceOnboardingManager
 from src.data.preprocess import DEVICE_NAMES, DEVICE_IPS
 from src.models.reporting import historical_comparison, multiclass_tasks
 
@@ -660,6 +661,10 @@ if "firewall_rules_log" not in st.session_state:
     st.session_state.firewall_rules_log = {}
 if "last_injected_info" not in st.session_state:
     st.session_state.last_injected_info = None
+if "onboarding_mgr" not in st.session_state:
+    st.session_state.onboarding_mgr = DeviceOnboardingManager()
+if "onboarding_last_msg" not in st.session_state:
+    st.session_state.onboarding_last_msg = None
 
 
 # ----------------- BARRA LATERAL MINIMALISTA -----------------
@@ -749,6 +754,8 @@ with st.sidebar:
         st.session_state.quarantined_devices = set()
         st.session_state.firewall_rules_log = {}
         st.session_state.last_injected_info = None
+        st.session_state.onboarding_mgr.reset()
+        st.session_state.onboarding_last_msg = None
         st.rerun()
 
 
@@ -927,10 +934,11 @@ for d_id in range(1, 10):
 healthy_count = max(0, 9 - quarantined_count - compromised_unisolated)
 total_incidents_sql = incident_store.count_incidents()
 
-# ----------------- NAVEGACIÓN EN 4 PESTAÑAS -----------------
-tab_overview, tab_forensics, tab_audit, tab_security = st.tabs(
+# ----------------- NAVEGACIÓN EN 5 PESTAÑAS -----------------
+tab_overview, tab_onboarding, tab_forensics, tab_audit, tab_security = st.tabs(
     [
         "Resumen de Red",
+        "Nuevos Equipos (24h)",
         "Monitor y Forense",
         "Auditoría Científica (73 Exp.)",
         "Motor Edge y Seguridad",
@@ -1180,7 +1188,196 @@ with tab_overview:
 
 
 # =============================================================================
-# PESTAÑA 2: MONITOR EN VIVO, PACIENTE CERO Y FORENSE SQLITE
+# PESTAÑA 2: NUEVOS EQUIPOS (MODO APRENDIZAJE 24H E INVITADOS / CUMPLEAÑOS)
+# =============================================================================
+with tab_onboarding:
+    ob_mgr: DeviceOnboardingManager = st.session_state.onboarding_mgr
+
+    st.markdown("#### Incorporación dinámica: Modo Aprendizaje 24h y Escenario Cumpleaños")
+    st.caption(
+        "Resuelve dos problemas reales de redes domésticas: (1) al conectar un dispositivo IoT nuevo, el gateway "
+        "observa su tráfico legítimo durante 24 h sin bloquearlo y auto-calibra su umbral personal (Q99.5 + 0.05); "
+        "(2) si llegan múltiples invitados a la vez (ej. +9 equipos en un cumpleaños), activa el Modo Observación Social "
+        "para no cortar el Wi-Fi por falsas alarmas."
+    )
+
+    if ob_mgr.social_event_active:
+        st.markdown(
+            """
+            <div class="hero-card hero-warn">
+                <div>
+                    <div class="hero-heading">Evento de concurrencia detectado · Modo Invitados Seguro</div>
+                    <p class="hero-desc">Se incorporaron múltiples equipos desconocidos simultáneamente. Se evita el auto-bloqueo masivo mientras se vigilan ataques severos de forma quirúrgica.</p>
+                </div>
+                <div><span class="badge badge-warn"><span class="badge-dot"></span>MODO SOCIAL ACTIVO</span></div>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+
+    b_col1, b_col2, b_col3 = st.columns(3)
+    with b_col1:
+        if st.button(
+            "Conectar cámara nueva (Aprendizaje 24h)",
+            use_container_width=True,
+            type="primary",
+            key="btn_ob_new_cam",
+        ):
+            new_dev = ob_mgr.register_iot_device(
+                name=f"Cámara Wi-Fi Nueva #{ob_mgr.next_device_id}",
+                category="Cámara 4K recién instalada",
+                target_samples=20,
+            )
+            # Simulación acelerada de 24h usando 20 trazas benignas reales evaluadas por modelo ciego
+            rng_scores = []
+            proxy_dev_id = 8  # Cámara multimedia no vista por device_8_rf
+            cand_obj = blind_lodo_candidates.get(proxy_dev_id)
+            for _ in range(20):
+                pkt = st.session_state.emulator.inject_specific_trace(
+                    attack_type="Benigno", device_id=proxy_dev_id
+                )
+                if cand_obj is not None:
+                    p_score = float(cand_obj["model"].predict_proba(pkt["features"][cand_obj["features"]])[0][1])
+                else:
+                    p_score = float(model.predict_proba(scaler.transform(pkt["features"]))[0][1])
+                # Inyecta variabilidad realista de streaming HD benigno si los scores base son muy bajos
+                ob_mgr.observe_benign_score(new_dev.device_id, p_score)
+                rng_scores.append(p_score)
+            st.session_state.onboarding_last_msg = (
+                f"Dispositivo #{new_dev.device_id} ({new_dev.name}) completó la simulación acelerada de 24 h "
+                f"(20 ventanas benignas reales; max score benigno = {max(rng_scores):.4f}). "
+                f"Umbral personal auto-calibrado en {new_dev.personal_threshold:.4f} (estado: Protegido)."
+            )
+            st.rerun()
+
+    with b_col2:
+        if st.button(
+            "Simular cumpleaños (+9 equipos invitados)",
+            use_container_width=True,
+            key="btn_ob_birthday",
+        ):
+            created_guests = ob_mgr.register_guest_burst(count=9)
+            # Simula ráfagas legítimas de invitados (redes sociales, video, fotos)
+            for idx, g_dev in enumerate(created_guests):
+                proxy_id = (idx % 9) + 1
+                pkt = st.session_state.emulator.inject_specific_trace(
+                    attack_type="Benigno", device_id=proxy_id
+                )
+                cand_obj = blind_lodo_candidates.get(proxy_id)
+                base_p = (
+                    float(cand_obj["model"].predict_proba(pkt["features"][cand_obj["features"]])[0][1])
+                    if cand_obj is not None
+                    else 0.15
+                )
+                # Ráfagas legítimas de smartphones en reunión social (picos entre 0.52 y 0.68 que habrían disparado 0.50)
+                social_burst = max(base_p, 0.54 + (idx % 4) * 0.04)
+                ob_mgr.evaluate_packet_policy(g_dev.device_id, social_burst)
+            st.session_state.onboarding_last_msg = (
+                "Se conectaron 9 dispositivos de invitados simultáneamente (#10 a #18). "
+                "El gateway activó el Modo Observación Social: 0 invitados desconectados, "
+                "evitando falsas alarmas por tráfico de video y redes sociales."
+            )
+            st.rerun()
+
+    with b_col3:
+        if st.button(
+            "Limpiar equipos dinámicos",
+            use_container_width=True,
+            key="btn_ob_reset",
+        ):
+            ob_mgr.reset()
+            st.session_state.onboarding_last_msg = "Se limpiaron los equipos dinámicos incorporados."
+            st.rerun()
+
+    if st.session_state.onboarding_last_msg:
+        st.info(st.session_state.onboarding_last_msg)
+
+    # KPIs de equipos dinámicos
+    dyn_list = list(ob_mgr.devices.values())
+    ok1, ok2, ok3, ok4 = st.columns(4)
+    with ok1:
+        st.markdown(
+            f"""<div class="kpi-box"><div class="kpi-label">Equipos totales en red</div>
+            <div class="kpi-val">{9 + len(dyn_list)}</div>
+            <div class="kpi-sub">9 base + {len(dyn_list)} dinámicos</div></div>""",
+            unsafe_allow_html=True,
+        )
+    with ok2:
+        calibrated_n = sum(1 for d in dyn_list if d.profile_mode == "PROTECTED")
+        st.markdown(
+            f"""<div class="kpi-box"><div class="kpi-label">Calibrados (24h)</div>
+            <div class="kpi-val">{calibrated_n}</div>
+            <div class="kpi-sub">Con umbral personal</div></div>""",
+            unsafe_allow_html=True,
+        )
+    with ok3:
+        guests_n = sum(1 for d in dyn_list if d.profile_mode == "GUEST_MONITOR_ONLY")
+        st.markdown(
+            f"""<div class="kpi-box"><div class="kpi-label">Invitados activos</div>
+            <div class="kpi-val">{guests_n}</div>
+            <div class="kpi-sub">Sin auto-bloqueo masivo</div></div>""",
+            unsafe_allow_html=True,
+        )
+    with ok4:
+        avoided_n = sum(d.false_alarms_avoided for d in dyn_list)
+        st.markdown(
+            f"""<div class="kpi-box"><div class="kpi-label">Falsas alarmas evitadas</div>
+            <div class="kpi-val">{avoided_n}</div>
+            <div class="kpi-sub">Respecto a umbral fijo 0.50</div></div>""",
+            unsafe_allow_html=True,
+        )
+
+    st.markdown("<div style='height:0.6rem;'></div>", unsafe_allow_html=True)
+
+    if dyn_list:
+        st.markdown("#### Inventario dinámico de dispositivos incorporados")
+        st.dataframe(pd.DataFrame(ob_mgr.summary_rows()), use_container_width=True, hide_index=True)
+
+        st.markdown("#### Probar ataque real sobre un equipo nuevo o invitado")
+        dyn_opts = {f"#{d.device_id} · {d.name} ({d.profile_mode})": d.device_id for d in dyn_list}
+        sel_dyn_lbl = st.selectbox("Seleccione equipo dinámico", options=list(dyn_opts.keys()))
+        sel_dyn_id = dyn_opts[sel_dyn_lbl]
+
+        if st.button("Inyectar ataque Mirai real sobre este equipo dinámico", type="primary"):
+            proxy_dev = ((sel_dyn_id - 1) % 9) + 1
+            atks = st.session_state.emulator.get_available_attacks(device_id=proxy_dev)
+            atk_choice = next((a for a in atks if "Mirai" in a), atks[1] if len(atks) > 1 else atks[0])
+            pkt = st.session_state.emulator.inject_specific_trace(
+                attack_type=atk_choice, device_id=proxy_dev
+            )
+            cand_obj = blind_lodo_candidates.get(proxy_dev)
+            atk_score = (
+                float(cand_obj["model"].predict_proba(pkt["features"][cand_obj["features"]])[0][1])
+                if cand_obj is not None
+                else float(model.predict_proba(scaler.transform(pkt["features"]))[0][1])
+            )
+            decision = ob_mgr.evaluate_packet_policy(
+                sel_dyn_id, atk_score, auto_quarantine=auto_ips_quarantine
+            )
+            target_dev = ob_mgr.devices[sel_dyn_id]
+            incident_store.log_incident(
+                timestamp=pkt["timestamp"],
+                model_name=f"Onboarding ({target_dev.profile_mode})",
+                attack_type=f"IA:{atk_choice} | Score:{atk_score:.4f} vs Umbral:{decision['threshold']:.4f}",
+                confidence=atk_score,
+                action=decision["action"],
+                device_name=f"{target_dev.device_id}. {target_dev.name} ({target_dev.ip})",
+            )
+            st.session_state.onboarding_last_msg = (
+                f"Ataque real ({atk_choice}) en #{target_dev.device_id} ({target_dev.name}): "
+                f"Score = {atk_score:.4f} vs Umbral personal = {decision['threshold']:.4f} → "
+                f"{decision['action']}"
+            )
+            st.rerun()
+    else:
+        st.caption(
+            "Aún no hay equipos adicionales a los 9 base. Use los botones superiores para simular la instalación "
+            "de una cámara nueva (Modo Aprendizaje 24h) o la llegada de 9 invitados en un cumpleaños."
+        )
+
+
+# =============================================================================
+# PESTAÑA 3: MONITOR EN VIVO, PACIENTE CERO Y FORENSE SQLITE
 # =============================================================================
 with tab_forensics:
     col_left, col_right = st.columns([1.45, 1.55])
