@@ -177,26 +177,9 @@
   \end{itemize}
   \vfill
   \centering
-  \resizebox{0.99\linewidth}{!}{%
-  \begin{tikzpicture}[
-    topb/.style={rectangle, draw=CINFNavy, fill=CINFNavy!10, very thick, rounded corners=4pt, minimum width=13.4cm, minimum height=1.0cm, align=center, font=\small\bfseries\sffamily},
-    ph/.style={rectangle, draw=CINFBlue, fill=CINFBlue!6, very thick, rounded corners=3pt, minimum width=2.0cm, minimum height=1.35cm, align=center, font=\scriptsize\sffamily},
-    qb/.style={rectangle, draw=CINFRed, fill=CINFRed!8, very thick, rounded corners=4pt, minimum width=13.4cm, minimum height=0.88cm, align=center, font=\scriptsize\bfseries\sffamily},
-    arr/.style={-{Stealth[length=2.2mm]}, very thick, CINFBlue}
-  ]
-    \node[topb] (sc) at (0, 2.05) {GESTIÓN ÁGIL: SCRUM ADAPTADO (Sprints 1--3 · Continuidad Sprints 4--7)};
-    \node[ph] (p1) at (-5.65, 0) {\textbf{1. Red IoT}\\Brecha};
-    \node[ph] (p2) at (-3.39, 0) {\textbf{2. Datos}\\89 CSV};
-    \node[ph] (p3) at (-1.13, 0) {\textbf{3. Limpieza}\\\texttt{HH\_jit}};
-    \node[ph] (p4) at (1.13, 0) {\textbf{4. Modelos}\\3 Anillos};
-    \node[ph] (p5) at (3.39, 0) {\textbf{5. Eval.\ Q}\\73 Exp.};
-    \node[ph] (p6) at (5.65, 0) {\textbf{6. MVP}\\Edge 2027};
-    \draw[arr] (p1)--(p2); \draw[arr] (p2)--(p3); \draw[arr] (p3)--(p4); \draw[arr] (p4)--(p5); \draw[arr] (p5)--(p6);
-    \draw[arr, CINFNavy] (sc.south)--(0, 0.78);
-    \node[qb] (qa) at (0, -1.5) {ASEGURAMIENTO DE CALIDAD CRISP-ML(Q): Anti-fuga · Calibración FPR · SHA-256 · 25 Tests};
-    \draw[arr, CINFRed] (qa.north)--(0, -0.74);
-  \end{tikzpicture}
-  }%
+  \IfFileExists{fig_ppt_metodologia_hibrida.png}{%
+    \includegraphics[width=0.99\linewidth,height=9.2cm,keepaspectratio]{fig_ppt_metodologia_hibrida.png}%
+  }{}
   \vfill
   \par\noindent
   {\renewcommand{\arraystretch}{1.15}\fontsize{14}{18}\selectfont

@@ -238,35 +238,12 @@ La Figura~\ref{fig:metodologia-hibrida} ilustra la articulación entre ambas cap
 
 \begin{figure}[H]
 \centering
-\resizebox{\textwidth}{!}{%
-\begin{tikzpicture}[
-  scrumbox/.style={rectangle, draw=CINFNavy, fill=CINFNavy!8, thick, rounded corners=4pt, minimum width=15.2cm, minimum height=1.2cm, align=center, font=\small\bfseries\sffamily},
-  phase/.style={rectangle, draw=CINFBlue, fill=CINFBlue!6, thick, rounded corners=4pt, minimum width=2.3cm, minimum height=1.5cm, align=center, font=\scriptsize\sffamily},
-  qbar/.style={rectangle, draw=CINFRed, fill=CINFRed!7, thick, rounded corners=4pt, minimum width=15.2cm, minimum height=0.95cm, align=center, font=\scriptsize\bfseries\sffamily},
-  arr/.style={-{Stealth[length=2.4mm]}, thick, CINFBlue}
-]
-  \node[scrumbox] (scrum) at (0, 2.35) {CAPA DE GESTIÓN ÁGIL: SCRUM ADAPTADO (Sprints 1--3 en 2026-2 · Sprints 4--7 en 2027-1)\\[-1pt]\scriptsize\normalfont Product Backlog · Revisiones Semanales (PO) · Definition of Done (25 Tests + SHA-256) · Gestión de Riesgos};
-
-  \node[phase] (p1) at (-6.4, 0) {\textbf{1. Comprensión}\\\textbf{Red IoT}\\Brecha y metas\\(Sprint 1)};
-  \node[phase] (p2) at (-3.84, 0) {\textbf{2. Comprensión}\\\textbf{de Datos}\\89 CSV / 7M filas\\(Sprint 1)};
-  \node[phase] (p3) at (-1.28, 0) {\textbf{3. Preparación}\\\textbf{y Limpieza}\\Sanitización \texttt{HH\_jit}\\(Sprint 1)};
-  \node[phase] (p4) at (1.28, 0) {\textbf{4. Modelado}\\\textbf{3 Anillos}\\RF, GB, LR, LOF\\(Sprint 2)};
-  \node[phase] (p5) at (3.84, 0) {\textbf{5. Evaluación}\\\textbf{Ciega 6/2/1}\\73 Exp. + Zero-Day\\(Sprint 2--3)};
-  \node[phase] (p6) at (6.4, 0) {\textbf{6. Despliegue}\\\textbf{MVP y Edge}\\Streamlit / RPi\\(Sprint 2--7)};
-
-  \draw[arr] (p1) -- (p2);
-  \draw[arr] (p2) -- (p3);
-  \draw[arr] (p3) -- (p4);
-  \draw[arr] (p4) -- (p5);
-  \draw[arr] (p5) -- (p6);
-  \draw[arr, dashed, CINFGray] (p5.north) -- ++(0,0.45) -| (p3.north);
-  \draw[arr, CINFNavy] (scrum.south) -- (0, 1.05);
-
-  \node[qbar] (qa) at (0, -1.75) {ASEGURAMIENTO DE CALIDAD TRANSVERSAL CRISP-ML(Q): Control anti-fuga (\texttt{HH\_jit}) · Calibración FPR $\le 0{,}1\%$ · Integridad \texttt{SHA-256} · Autenticación JWT · 25 Pruebas Unitarias};
-  \draw[arr, CINFRed] (qa.north) -- (0, -0.82);
-\end{tikzpicture}
-}%
-\caption{Marco metodológico híbrido de doble capa: ciclo CRISP-DM extendido con aseguramiento de calidad CRISP-ML(Q) bajo gestión iterativa Scrum.}
+\IfFileExists{fig_ppt_metodologia_hibrida.png}{%
+  \includegraphics[width=\textwidth]{fig_ppt_metodologia_hibrida.png}%
+}{%
+  \fbox{\parbox[c][4cm][c]{0.85\textwidth}{\centering Marco metodológico híbrido circular: CRISP-DM / CRISP-ML(Q) + Scrum}}%
+}
+\caption{Marco metodológico híbrido iterativo: ciclo circular CRISP-DM extendido con aseguramiento de calidad CRISP-ML(Q) articulado con el ciclo ágil Scrum.}
 \label{fig:metodologia-hibrida}
 \end{figure}
 

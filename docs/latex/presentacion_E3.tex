@@ -209,40 +209,21 @@
 % -----------------------------------------------------------------------------
 \begin{frame}{Metodología Híbrida: CRISP-DM / CRISP-ML(Q) + Scrum}
   \centering
-  \resizebox{0.96\textwidth}{!}{%
-  \begin{tikzpicture}[
-    scrumbox/.style={rectangle, draw=CINFNavy, fill=CINFNavy!10, very thick, rounded corners=4pt, minimum width=15.0cm, minimum height=1.0cm, align=center, font=\small\bfseries\sffamily},
-    phase/.style={rectangle, draw=CINFBlue, fill=CINFBlue!6, very thick, rounded corners=4pt, minimum width=2.25cm, minimum height=1.35cm, align=center, font=\scriptsize\sffamily},
-    qbar/.style={rectangle, draw=CINFRed, fill=CINFRed!8, very thick, rounded corners=4pt, minimum width=15.0cm, minimum height=0.82cm, align=center, font=\scriptsize\bfseries\sffamily},
-    arr/.style={-{Stealth[length=2.3mm]}, very thick, CINFBlue}
-  ]
-    \node[scrumbox] (scrum) at (0, 2.05) {CAPA DE GESTIÓN ÁGIL: SCRUM ADAPTADO (Sprints 1--3 en 2026 · Sprints 4--7 en 2027)\\[-1pt]\scriptsize\normalfont Product Backlog · Seguimiento Semanal · Definition of Done (25 Tests OK + SHA-256)};
-
-    \node[phase] (p1) at (-6.35, 0) {\textbf{1. Problema}\\Red IoT\\(Sprint 1)};
-    \node[phase] (p2) at (-3.81, 0) {\textbf{2. Datos}\\89 CSV / 7M\\(Sprint 1)};
-    \node[phase] (p3) at (-1.27, 0) {\textbf{3. Limpieza}\\Sanit.\ \texttt{HH\_jit}\\(Sprint 1)};
-    \node[phase] (p4) at (1.27, 0) {\textbf{4. Modelado}\\3 Anillos\\(Sprint 2)};
-    \node[phase] (p5) at (3.81, 0) {\textbf{5. Eval.\ Q}\\73 Exp + 0-Day\\(Sprint 2--3)};
-    \node[phase] (p6) at (6.35, 0) {\textbf{6. Despliegue}\\MVP y Edge\\(Sprint 2--7)};
-
-    \draw[arr] (p1)--(p2); \draw[arr] (p2)--(p3); \draw[arr] (p3)--(p4); \draw[arr] (p4)--(p5); \draw[arr] (p5)--(p6);
-    \draw[arr, dashed, CINFGray] (p5.north) -- ++(0,0.36) -| (p3.north);
-    \draw[arr, CINFNavy] (scrum.south) -- (0, 0.88);
-
-    \node[qbar] (qa) at (0, -1.48) {ASEGURAMIENTO DE CALIDAD CRISP-ML(Q): Control anti-fuga · Calibración FPR $\le 0{,}1\%$ · Hashes \texttt{SHA-256} · 25 Tests};
-    \draw[arr, CINFRed] (qa.north) -- (0, -0.72);
-  \end{tikzpicture}
-  }%
+  \IfFileExists{fig_ppt_metodologia_hibrida.png}{%
+    \includegraphics[width=0.96\textwidth,height=0.58\textheight,keepaspectratio]{fig_ppt_metodologia_hibrida.png}%
+  }{%
+    \fbox{\parbox[c][3cm][c]{0.85\textwidth}{\centering Ciclo circular CRISP-DM / CRISP-ML(Q) + Ciclo iterativo Scrum}}%
+  }
   \vspace{2mm}
   \begin{columns}[T]
     \begin{column}{0.47\textwidth}
-      \begin{block}{\textbf{Capa Científica (CRISP-DM + Q)}}
-        \scriptsize Ordena las 6 fases de datos/IA y exige auditar fugas temporales, robustez \textit{zero-day} e integridad MLOps.
+      \begin{block}{\textbf{Capa Científica (CRISP-DM + Calidad Q)}}
+        \scriptsize Ciclo iterativo de 6 fases con retornos entre preparación, modelado y evaluación; audita fugas (\texttt{HH\_jit}) y robustez \textit{zero-day}.
       \end{block}
     \end{column}
     \begin{column}{0.47\textwidth}
-      \begin{exampleblock}{\textbf{Capa de Gestión (Scrum + Riesgos)}}
-        \scriptsize Sprints 1--3 completados (Etapas 1--7), mitigando fuga de datos, FPR en cámaras y auto-bloqueo del router.
+      \begin{exampleblock}{\textbf{Capa Ágil (Scrum + Gestión de Riesgos)}}
+        \scriptsize Sprints de 3--4 semanas (S1--S3 en 2026; S4--S7 en 2027), mitigando riesgos críticos con \textit{DoD} de 25 tests y \texttt{SHA-256}.
       \end{exampleblock}
     \end{column}
   \end{columns}
