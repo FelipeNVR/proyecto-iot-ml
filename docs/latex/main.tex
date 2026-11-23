@@ -21,12 +21,11 @@
 \usepackage{float}
 \usepackage{fancyhdr}
 \usepackage{titlesec}
-\usepackage{hyperref}
-\usepackage{cleveref}
-\usepackage{pgfgantt}
 \usepackage{colortbl}
 \usepackage{tikz}
 \usetikzlibrary{arrows.meta,positioning,shapes.geometric,fit,backgrounds,decorations.pathreplacing}
+\usepackage{pgfgantt}
+\usepackage{hyperref}
 
 % Bibliografía numérica, ordenada por aparición, mediante BibTeX.
 % Compilación: pdflatex -> bibtex -> pdflatex -> pdflatex.
@@ -93,7 +92,7 @@
 \vspace{1.0cm}
 {\large\color{CINFRed}\textbf{ARTÍCULO DE INVESTIGACIÓN TECNOLÓGICA APLICADA}}\\[0.3cm]
 {\LARGE\color{CINFNavy}\textbf{\projecttitle}}\\[0.25cm]
-{\large\color{CINFGray}Ingeniería Civil Informática · Facultad de Ingeniería}
+{\large\color{CINFGray}Ingeniería Civil Informática | Facultad de Ingeniería}
 
 \vspace{1.0cm}
 \renewcommand{\arraystretch}{1.25}
@@ -126,7 +125,7 @@ La masificación de dispositivos del Internet de las Cosas (IoT) con recursos li
 % CUERPO DEL INFORME
 % -----------------------------------------------------------------------------
 \section{Introducción}
-La masificación de dispositivos conectados a internet —sensores, cámaras, relés inteligentes y asistentes domésticos— ha transformado la forma en que los hogares interactúan con la tecnología. Sin embargo, esta adopción acelerada no ha ido acompañada de un nivel equivalente de seguridad: los dispositivos IoT suelen priorizar bajo costo y bajo consumo energético, dejando de lado mecanismos robustos de protección frente a intrusiones.
+La masificación de dispositivos conectados a internet ---sensores, cámaras, relés inteligentes y asistentes domésticos--- ha transformado la forma en que los hogares interactúan con la tecnología. Sin embargo, esta adopción acelerada no ha ido acompañada de un nivel equivalente de seguridad: los dispositivos IoT suelen priorizar bajo costo y bajo consumo energético, dejando de lado mecanismos robustos de protección frente a intrusiones.
 
 Esta debilidad ha sido explotada históricamente por ataques de tipo botnet, que comprometen múltiples dispositivos de forma simultánea para ejecutar ataques a mayor escala. Detectar este tipo de comportamiento anómalo de manera oportuna es un desafío relevante tanto para usuarios domésticos como para pequeñas organizaciones que no cuentan con herramientas de monitoreo especializadas.
 
@@ -703,7 +702,7 @@ Gradient Boosting & $O(k \cdot n \cdot d)$ & $O(k \cdot \text{prof.})$ & Estado 
   \item \textbf{Viabilidad de despliegue:} el escenario objetivo es un dispositivo de borde (\textit{edge}) o un computador doméstico con recursos limitados. Un modelo de Random Forest o Gradient Boosting serializado ocupa entre 0,3~MB y 2,5~MB; una red neuronal profunda requiere decenas de megabytes y dependencias pesadas.
 \end{enumerate}
 
-\subsection{\textit{Stack} tecnológico}
+\subsection{\texorpdfstring{\textit{Stack}}{Stack} tecnológico}
 La Tabla~\ref{tab:stack} presenta las herramientas y librerías seleccionadas, junto con la justificación de cada elección. Todas las herramientas son de código abierto y gratuitas, en coherencia con la restricción de presupuesto cero del proyecto.
 
 \begin{table}[H]
@@ -915,9 +914,9 @@ La Tabla~\ref{tab:zeroday} presenta los 16 escenarios de exclusión conjunta de 
 \centering\scriptsize
 \caption{Evaluación de familia y dispositivo nunca vistos (\textit{Zero-Day}) en Random Forest (16 escenarios).}
 \label{tab:zeroday}
-\begin{tabularx}{\textwidth}{l c c c c c c}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}X l c c c c c}
 \toprule
-\textbf{Familia excluida} & \textbf{Dispositivo} & \textbf{F1 (umbral 0,5)} & \textbf{F1 (ajustado)} & \textbf{Recall (ajustado)} & \textbf{FP} & \textbf{FN (de 2.000)} \\
+\textbf{Familia excluida} & \textbf{Dispositivo} & \textbf{F1 (0,5)} & \textbf{F1 (aj.)} & \textbf{Recall (aj.)} & \textbf{FP} & \textbf{FN (/2.000)} \\
 \midrule
 BASHLITE (\texttt{gafgyt}) & 1 (Danmini) & 0,7257 & 1,0000 & 100,00\% & 0 & 0 \\
 Mirai & 1 (Danmini) & 0,8907 & 0,8907 & 80,30\% & 0 & 394 \\
@@ -1004,11 +1003,11 @@ Una ejecución limpia del protocolo riguroso se inicia mediante \texttt{python -
 \section{Discusión}
 
 \subsection{Contraste crítico con el estado del arte}
-Los resultados obtenidos permiten contextualizar las métricas cercanas al 99,9\% reportadas frecuentemente en la literatura sobre N-BaIoT. Mientras Meidan et al.~\cite{meidan2018} entrenan un \textit{autoencoder} independiente por dispositivo —resolviendo la heterogeneidad a costa de perder escalabilidad ante hardware nuevo— y Hossain e Islam~\cite{hossain2023} o Naeem et al.~\cite{cnnbilstm2025} reportan exactitudes próximas al 99--99,99\% en particiones estáticas intra-dispositivo, nuestra evaluación demuestra que ese desempeño depende críticamente de dos condiciones: que las familias de ataque estén presentes durante el entrenamiento y que las particiones no oculten artefactos temporales.
+Los resultados obtenidos permiten contextualizar las métricas cercanas al 99,9\% reportadas frecuentemente en la literatura sobre N-BaIoT. Mientras Meidan et al.~\cite{meidan2018} entrenan un \textit{autoencoder} independiente por dispositivo ---resolviendo la heterogeneidad a costa de perder escalabilidad ante hardware nuevo--- y Hossain e Islam~\cite{hossain2023} o Naeem et al.~\cite{cnnbilstm2025} reportan exactitudes próximas al 99--99,99\% en particiones estáticas intra-dispositivo, nuestra evaluación demuestra que ese desempeño depende críticamente de dos condiciones: que las familias de ataque estén presentes durante el entrenamiento y que las particiones no oculten artefactos temporales.
 
 Al comparar con los estudios que sí evalúan transferencia entre dispositivos, como Wardana et al.~\cite{ensembledn} (exactitud 97,21\% y recall 87,31\%) y Bhilwarawala et al.~\cite{bridge2026} (brechas severas \textit{cross-domain}), nuestros experimentos corroboran la fragilidad de la generalización cuando cambian simultáneamente el fabricante y el vector de ataque. La diferencia fundamental de este trabajo radica en cuantificar explícitamente esa frontera mediante un protocolo sanitizado 6/2/1, mostrando que Random Forest logra generalizar hacia dispositivos nuevos (F1 medio 0,9995 con FPR de 0,14\%) mientras las familias sean conocidas, pero se degrada hasta 39,90\% de recall al introducir una botnet inédita. Conviene reiterar que la literatura de Deep Learning constituye aquí un marco de referencia y no una comparación experimental bajo hardware idéntico.
 
-\subsection{Implicancias de la fuga temporal (\texttt{HH\_jit}), facilidad intrínseca del benchmark y límite supervisado}
+\subsection{Implicancias de la fuga temporal (\texorpdfstring{\texttt{HH\_jit}}{HH\_jit}), facilidad intrínseca del benchmark y límite supervisado}
 El hallazgo de que las columnas \texttt{HH\_jit\_*\_mean} conservaban la época Unix de captura ($\sim 1{,}5\times 10^9$~s) evidencia por qué incorporar la capa de aseguramiento de calidad de CRISP-ML(Q) \cite{studer2021crispmlq} sobre CRISP-DM \cite{chapman2000crispdm} resulta indispensable en ciberseguridad aplicada. Sin esa auditoría, los árboles de decisión podían separar sesiones aprovechando un artefacto cronológico del laboratorio. Una vez saneado el conjunto (verificando cero columnas con magnitudes superiores a $10^7$ entre las 105 variables conservadas) y analizada la importancia Gini (Figura~\ref{fig:importancia-rf}), la ablación sin ventanas lentas (caída del peor recall a 29,25\%) explica físicamente qué aprende el modelo: la persistencia volumétrica de ráfagas DDoS en ventanas de decaimiento lento ($\lambda = 0{,}01$ y $0{,}1$).
 
 Una pregunta crítica frente al F1 medio de 0,9995 en dispositivos externos con familias conocidas es si persiste alguna fuga oculta o si el problema binario dentro de N-BaIoT resulta intrínsecamente separable. La auditoría forense directa sobre las distribuciones crudas de los archivos CSV revela dos factores propios del laboratorio de 2018 que explican estas cifras sin involucrar fuga en el código: (1)~existe una separación física de dos órdenes de magnitud (100$\times$ a 250$\times$) entre equipos benignos en reposo (mediana \texttt{MI\_dir\_L0.01\_weight} entre 29,6 y 115,9 paquetes; \texttt{HpHp\_L0.01\_weight} entre 4,2 y 19,8) y ráfagas de Mirai (3.562 a 8.253 paquetes con \texttt{HpHp\_L0.01\_weight} $= 1{,}0$ constante); y (2)~en las capturas \texttt{gafgyt.tcp} y \texttt{gafgyt.udp}, el uso de \textit{IP-Spoofing} con paquetes fijos de 60~bytes genera vectores casi idénticos entre distintos dispositivos, registrando apenas entre 0,3\% y 0,5\% de filas únicas sobre muestras de 2.000 registros.
@@ -1016,9 +1015,9 @@ Una pregunta crítica frente al F1 medio de 0,9995 en dispositivos externos con 
 En consecuencia, el desempeño realista ante incertidumbre emerge precisamente cuando el problema abandona esa separabilidad artificial: al excluir familias enteras en los 16 escenarios \textit{Zero-Day} (Tabla~\ref{tab:zeroday}, con recall de 39,90\% a 53,95\% y exactitud de 69,9\% a 77,0\%), al clasificar los 10 subtipos crudos de ataque (79,56\% de exactitud), al operar el detector no supervisado \texttt{LOF} (75,60\% de recall) o al enfrentar cámaras multimedia ruidosas en LODO sin calibración (hasta 41,74\% de FPR en el monitor Philips). Esta evidencia descarta contaminación en el protocolo 6/2/1 y justifica tanto la defensa híbrida en tres anillos como el \textit{Modo Aprendizaje 24h} y el \textit{Modo Observación Social} implementados para absorber la entrada de dispositivos nuevos o ráfagas de invitados sin desencadenar falsas alarmas masivas.
 
 \subsection{Calidad, ciberseguridad, eficiencia e impacto sociotécnico}
-Desde la perspectiva de ingeniería de software y ciberseguridad, el diseño de doble pipeline desacopla el costo de entrenamiento del entorno de inferencia, garantizando tiempos unitarios de 5,28~ms en CPU sin GPU. La incorporación de controles de defensa en profundidad —autenticación JWT \texttt{HS256} con comparación en tiempo constante, verificación \texttt{SHA-256} previa a la deserialización de artefactos \texttt{joblib}, consultas SQL parametrizadas y lista blanca \textit{Anti-Lockout} combinada con bloqueo Capa~2/Capa~3 (\texttt{IP + MAC})— responde a amenazas reales de operación como el envenenamiento de modelos, la inyección SQL y la denegación de servicio autoinducida por \textit{IP-Spoofing}.
+Desde la perspectiva de ingeniería de software y ciberseguridad, el diseño de doble pipeline desacopla el costo de entrenamiento del entorno de inferencia, garantizando tiempos unitarios de 5,28~ms en CPU sin GPU. La incorporación de controles de defensa en profundidad ---autenticación JWT \texttt{HS256} con comparación en tiempo constante, verificación \texttt{SHA-256} previa a la deserialización de artefactos \texttt{joblib}, consultas SQL parametrizadas y lista blanca \textit{Anti-Lockout} combinada con bloqueo Capa~2/Capa~3 (\texttt{IP + MAC})--- responde a amenazas reales de operación como el envenenamiento de modelos, la inyección SQL y la denegación de servicio autoinducida por \textit{IP-Spoofing}.
 
-En el plano ético y organizacional, el sistema promueve una protección local que no depende de servicios externos ni inspecciona la carga útil (\textit{payload}) cifrada de las comunicaciones domésticas, reduciendo riesgos de privacidad. No obstante, declarar abiertamente que el prototipo no está autorizado para bloqueo automático en producción evita generar una falsa sensación de seguridad en usuarios no expertos.
+En el plano ético, organizacional y social, el sistema promueve una protección local que no depende de servicios externos ni inspecciona la carga útil (\textit{payload}) cifrada de las comunicaciones domésticas, reduciendo riesgos de privacidad. A nivel de sociedad, dotar a hogares y pequeñas organizaciones de herramientas abiertas de detección temprana contribuye a contener la proliferación de nodos zombis IoT que amplifican ataques DDoS contra infraestructura crítica y servicios digitales públicos. No obstante, declarar abiertamente que el prototipo no está autorizado para bloqueo automático en producción evita generar una falsa sensación de seguridad en usuarios no expertos.
 
 \subsection{Amenazas a la validez}
 Se reconocen cuatro amenazas principales a la validez externa e interna: (1)~los registros de N-BaIoT provienen de nueve dispositivos comerciales capturados en 2018, por lo que pueden diferir del tráfico moderno (QUIC, HTTP/3, cámaras 4K); (2)~el muestreo balanceado por bloques posicionales no refleja la proporción real de tráfico benigno frente a ataques en operación diaria, impidiendo estimar falsas alarmas por día; (3)~los intervalos de confianza por paquete serían inválidos dada la autocorrelación temporal dentro de una misma ráfaga; y (4)~la consola MVP opera sobre reproducción de vectores CSV precalculados, quedando pendiente la validación numérica del extractor incremental sobre paquetes crudos.
@@ -1064,7 +1063,7 @@ El proyecto fue desarrollado íntegramente de forma individual, correspondiendo 
 \toprule
 \textbf{Integrante} & \textbf{Responsabilidades / contribuciones} & \textbf{Evidencias} \\
 \midrule
-\students & Formulación del problema y estado del arte; definición de metodología híbrida CRISP-DM/CRISP-ML(Q) + Scrum; auditoría completa de 89 CSV (7,06M filas) y saneamiento \texttt{HH\_jit}; desarrollo del pipeline offline (5 clasificadores, 3 anillos y protocolo riguroso 6/2/1 de 73 experimentos); implementación del MVP en Streamlit (JWT, \texttt{SHA-256}, SQLite, generador firewall y enrutamiento ciego); suite de 25 pruebas unitarias; redacción del paper final, diseño del póster, presentación y portafolio. & Repositorio GitHub \url{https://github.com/FelipeNVR/proyecto-iot-ml}, directorio \texttt{proyecto-iot-ml/}, \texttt{experiments/rigorous\_v1/}, \texttt{models\_registry/}, suite \texttt{tests/} (25/25 OK), \texttt{main.tex}, \texttt{poster\_E3.tex}, \texttt{presentacion\_E3.tex} y \texttt{PORTAFOLIO\_E3\_CINF200.md}. \\
+\students & Formulación del problema y estado del arte; definición de metodología híbrida CRISP-DM/CRISP-ML(Q) + Scrum; auditoría completa de 89 CSV (7,06M filas) y saneamiento \texttt{HH\_jit}; desarrollo del pipeline offline (5 clasificadores, 3 anillos y protocolo riguroso 6/2/1 de 73 experimentos); implementación del MVP en Streamlit (JWT, \texttt{SHA-256}, SQLite, generador firewall y enrutamiento ciego); suite de 25 pruebas unitarias; redacción del paper final, diseño del póster, presentación y portafolio. & Repositorio GitHub \href{https://github.com/FelipeNVR/proyecto-iot-ml}{\texttt{github.com/FelipeNVR/\allowbreak proyecto-iot-ml}}, directorio \texttt{proyecto-iot-ml/}, \texttt{experiments/rigorous\_v1/}, \texttt{models\_registry/}, suite \texttt{tests/} (25/25 OK), \texttt{main.tex}, \texttt{poster\_E3.tex}, \texttt{presentacion\_E3.tex} y \texttt{PORTAFOLIO\_E3\_CINF200.md}. \\
 \bottomrule
 \end{tabularx}
 \end{table}
@@ -1081,7 +1080,7 @@ La Tabla~\ref{tab:evidencias} consolida el inventario de artefactos técnicos, c
 \toprule
 \textbf{Artefacto} & \textbf{Ubicación / enlace} & \textbf{Descripción y estado} \\
 \midrule
-Prototipo MVP y código fuente & \url{https://github.com/FelipeNVR/proyecto-iot-ml} (\texttt{proyecto-iot-ml/}) & Consola Streamlit operativa (\texttt{app/app.py}), motor de 3 anillos, 9 folds ciegos 6/2/1, modo aprendizaje 24h e invitados (\texttt{device\_onboarding.py}), 73 experimentos y 25/25 pruebas unitarias aprobadas. \\
+Prototipo MVP y código fuente & \href{https://github.com/FelipeNVR/proyecto-iot-ml}{\texttt{github.com/FelipeNVR/\allowbreak proyecto-iot-ml}} (\texttt{proyecto-iot-ml/}) & Consola Streamlit operativa (\texttt{app/app.py}), motor de 3 anillos, 9 folds ciegos 6/2/1, modo aprendizaje 24h e invitados (\texttt{device\_onboarding.py}), 73 experimentos y 25/25 pruebas unitarias aprobadas. \\
 Póster científico & \texttt{poster\_E3.tex} (PDF A0) & Póster científico profesional con problema, metodología híbrida CRISP-DM/CRISP-ML(Q) + Scrum, arquitectura, resultados 6/2/1, caída Zero-Day y conclusiones. \\
 Presentación de soporte & \texttt{presentacion\_E3.tex} (PDF 16:9) & Presentación ejecutiva complementaria con gráficos de alta resolución (300 DPI), discusión crítica y demostración guiada. \\
 Portafolio técnico & \texttt{PORTAFOLIO\_E3\_CINF200.md} y repositorio GitHub & Índice trazable con el inventario completo de fuentes, planes, código, experimentos reproducibles y declaraciones de autoría. \\
